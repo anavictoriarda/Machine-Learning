@@ -1,4 +1,4 @@
-[README (1).md](https://github.com/user-attachments/files/28689989/README.1.md)
+[README.md](https://github.com/user-attachments/files/28689989/README.1.md)
 # Machine Learning — Notas Matemáticas
 
 Documentos en LaTeX sobre algoritmos de aprendizaje automático no supervisado, con énfasis en formulación matemática rigurosa, demostraciones y variantes.
