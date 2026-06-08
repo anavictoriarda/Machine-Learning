@@ -1,0 +1,792 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{metropolis}           % Tema moderno y limpio
+\useoutertheme{metropolis}
+\useinnertheme{metropolis}
+\usecolortheme{default}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{dsfont}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{automata, positioning, arrows.meta, shapes.geometric}
+
+% Configuración de colores
+\setbeamercolor{title}{fg=black!90!orange}
+\setbeamercolor{frametitle}{fg=white, bg=orange!70!black}
+\setbeamercolor{block title}{fg=white, bg=orange!60!black}
+\setbeamercolor{block body}{fg=black, bg=gray!5}
+\setbeamercolor{example block title}{fg=white, bg=green!50!black}
+\setbeamercolor{example block body}{fg=black, bg=green!5}
+
+% Definir entornos de teoremas
+\newtheorem{teorema}{Teorema}
+\newtheorem{definicion}{Definición}
+
+% Comandos útiles
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\paren}[1]{\left( #1 \right)}
+\newcommand{\bracks}[1]{\left[ #1 \right]}
+\newcommand{\argmin}{\operatorname{argmin}}
+\newcommand{\argmax}{\operatorname{argmax}}
+
+% Información de la presentación
+\title{Algoritmo K-means}
+\subtitle{Un recorrido por la formulación matemática, convergencia y variantes}
+\author{}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+\section{Introducción al clustering}
+
+\begin{frame}{¿Qué es el clustering?}
+    \begin{itemize}
+        \item El \textbf{clustering} (o agrupamiento) es una técnica de aprendizaje no supervisado.
+        \item Objetivo: particionar un conjunto de datos en grupos (clústeres) tales que:
+        \begin{itemize}
+            \item Los puntos dentro de un mismo clúster sean \textbf{similares} entre sí.
+            \item Los puntos de diferentes clústeres sean \textbf{disímiles}.
+        \end{itemize}
+        \item Aplicaciones:
+        \begin{itemize}
+            \item Segmentación de clientes
+            \item Compresión de imágenes
+            \item Análisis de datos biológicos
+            \item Sistemas de recomendación
+        \end{itemize}
+    \end{itemize}
+    
+    \begin{center}
+        \begin{tikzpicture}[scale=0.6]
+            % Datos sin agrupar
+            \begin{scope}[xshift=0cm]
+                \draw[gray!30] (0,0) rectangle (4,4);
+                \foreach \x/\y in {1/2, 1.2/1.8, 0.8/2.2, 1.5/3, 1.8/2.5, 2.5/1.2, 2.8/1, 3/1.5, 3.2/0.8, 2.2/1.8, 3.5/2.8, 3.2/3, 3.8/2.5, 3.5/2, 2.8/3.2} {
+                    \fill[blue] (\x,\y) circle (2pt);
+                }
+                \node at (2,4.3) {Datos originales};
+            \end{scope}
+            
+            % Datos agrupados
+            \begin{scope}[xshift=5cm]
+                \draw[gray!30] (0,0) rectangle (4,4);
+                \foreach \x/\y in {1/2, 1.2/1.8, 0.8/2.2, 1.5/3, 1.8/2.5, 2.2/1.8} {
+                    \fill[red] (\x,\y) circle (2pt);
+                }
+                \foreach \x/\y in {2.5/1.2, 2.8/1, 3/1.5, 3.2/0.8} {
+                    \fill[blue] (\x,\y) circle (2pt);
+                }
+                \foreach \x/\y in {3.5/2.8, 3.2/3, 3.8/2.5, 3.5/2, 2.8/3.2} {
+                    \fill[green!70!black] (\x,\y) circle (2pt);
+                }
+                \node at (2,4.3) {Clustering (\(K=3\))};
+            \end{scope}
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Tipos de algoritmos de clustering}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Jerárquicos:}
+        \begin{itemize}
+            \item Construyen una jerarquía de clústeres.
+            \item Dendrograma como resultado.
+            \item Ejemplos: single-link, complete-link.
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{Particionales:}
+        \begin{itemize}
+            \item Dividen los datos en \(K\) particiones.
+            \item Requieren especificar \(K\) de antemano.
+            \item Ejemplos: \textbf{K-means}, K-medoids.
+        \end{itemize}
+    \end{columns}
+    
+    \vspace{0.5cm}
+    \begin{center}
+        \textbf{K-means es el algoritmo particional más popular por su simplicidad y eficiencia.}
+    \end{center}
+\end{frame}
+
+\section{Formulación matemática del problema}
+
+\begin{frame}{Definición formal}
+    \begin{block}{Datos de entrada}
+        \begin{itemize}
+            \item Conjunto de datos: \(X = \{x_1, x_2, \ldots, x_n\} \subset \R^d\)
+            \item Número de clústeres: \(K \in \mathbb{N}\) (fijado de antemano)
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Objetivo}
+        Encontrar una partición de \(X\) en \(K\) subconjuntos \(C_1, C_2, \ldots, C_K\) y sus respectivos centroides \(\mu_1, \mu_2, \ldots, \mu_K \in \R^d\) que minimicen la \textbf{función de error}:
+        
+        \[
+        J(C, \mu) = \sum_{j=1}^{K} \sum_{x_i \in C_j} \norm{x_i - \mu_j}^2
+        \]
+    \end{block}
+    
+    \pause
+    \textbf{Interpretación:} \(J\) mide la varianza intra-clúster (inertia). Queremos que los puntos estén lo más cerca posible de su centroide.
+\end{frame}
+
+\begin{frame}{Notación y terminología}
+    \begin{itemize}
+        \item \textbf{Centroide \(\mu_j\)}: representante del clúster \(j\), calculado como la media de sus puntos.
+        \item \textbf{Distancia euclídea}: \(\norm{x_i - \mu_j}^2 = \sum_{m=1}^d (x_{im} - \mu_{jm})^2\)
+        \item \textbf{Participación}: cada punto pertenece a \textbf{un único} clúster (hard clustering).
+        \item \textbf{Función de costo}: también llamada \textbf{inertia} o \textbf{SSE} (Sum of Squared Errors).
+    \end{itemize}
+    
+    \begin{exampleblock}{Ejemplo unidimensional}
+        \(X = \{1, 2, 3, 8, 9, 10\}\), \(K=2\)
+        
+        Si \(C_1 = \{1,2,3\}\), \(\mu_1 = 2\); \(C_2 = \{8,9,10\}\), \(\mu_2 = 9\)
+        
+        \(J = (1-2)^2 + (2-2)^2 + (3-2)^2 + (8-9)^2 + (9-9)^2 + (10-9)^2 = 1+0+1+1+0+1 = 4\)
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{El problema de optimización}
+    \begin{block}{Problema de optimización combinatoria}
+        \[
+        \min_{\substack{\text{particiones }\{C_j\}_{j=1}^K \\ \text{centroides } \mu_j \in \R^d}} \sum_{j=1}^K \sum_{x_i \in C_j} \norm{x_i - \mu_j}^2
+        \]
+    \end{block}
+    
+    \pause
+    \textbf{Dificultades:}
+    \begin{itemize}
+        \item Problema \textbf{NP-hard} en general (para \(K>1\) y \(d>1\)).
+        \item Número de particiones posibles: \(\frac{1}{K!} \sum_{j=1}^K (-1)^{K-j} \binom{K}{j} j^n\) (crecimiento exponencial).
+        \item Función no convexa y no diferenciable por la asignación discreta.
+    \end{itemize}
+    
+    \pause
+    \textbf{Solución práctica:} Algoritmos iterativos que encuentran \textbf{mínimos locales}.
+\end{frame}
+
+\section{Algoritmo de Lloyd (K-means clásico)}
+
+\begin{frame}{Historia}
+    \begin{itemize}
+        \item El algoritmo fue propuesto por \textbf{Stuart Lloyd} en 1957 en los Laboratorios Bell, pero no se publicó hasta 1982 [Lloyd, 1982].
+        \item Independientemente, \textbf{Hugo Steinhaus} (1956) y \textbf{Edward Forgy} (1965) propusieron variantes similares.
+        \item Por eso a veces se llama \textbf{algoritmo de Lloyd-Forgy}.
+        \item Es uno de los algoritmos más utilizados en minería de datos.
+    \end{itemize}
+    
+    \begin{block}{Referencia clásica}
+        Lloyd, S. P. (1982). Least squares quantization in PCM. \textit{IEEE Transactions on Information Theory}, 28(2), 129-137.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Estructura general del algoritmo}
+    \begin{block}{Algoritmo de K-means (Lloyd)}
+        \textbf{Entrada:} Datos \(X = \{x_1,\ldots,x_n\}\), número de clústeres \(K\), criterio de parada.
+        
+        \textbf{Inicialización:} Elegir \(K\) centroides iniciales \(\mu_1^{(0)}, \ldots, \mu_K^{(0)}\).
+        
+        \textbf{Iteración para \(t = 0, 1, 2, \ldots\):}
+        \begin{enumerate}
+            \item \textbf{Asignación:} Para cada punto \(x_i\), asignarlo al centroide más cercano:
+            \[
+            C_j^{(t)} = \left\{ x_i : \norm{x_i - \mu_j^{(t)}}^2 \leq \norm{x_i - \mu_\ell^{(t)}}^2 \; \forall \ell \right\}
+            \]
+            (en caso de empate, asignar arbitrariamente).
+            
+            \item \textbf{Actualización:} Recalcular cada centroide como la media de los puntos asignados:
+            \[
+            \mu_j^{(t+1)} = \frac{1}{|C_j^{(t)}|} \sum_{x_i \in C_j^{(t)}} x_i
+            \]
+        \end{enumerate}
+        
+        Hasta que los centroides no cambien significativamente o se alcance el máximo de iteraciones.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Visualización del proceso iterativo}
+    \begin{center}
+        \begin{tikzpicture}[scale=0.7]
+            % Iteración 1
+            \begin{scope}[xshift=0cm]
+                \draw[gray!30] (0,0) rectangle (4,4);
+                \foreach \x/\y in {0.5/1, 1/0.5, 1.5/1.5, 2/1, 2.5/3, 3/2.5, 3.5/3.5} {
+                    \fill[blue] (\x,\y) circle (2pt);
+                }
+                \fill[red] (1,1) circle (4pt) node[below right] {\(\mu_1\)};
+                \fill[red] (3,3) circle (4pt) node[below right] {\(\mu_2\)};
+                \node at (2,-0.5) {Inicialización};
+            \end{scope}
+            
+            % Iteración 2
+            \begin{scope}[xshift=5cm]
+                \draw[gray!30] (0,0) rectangle (4,4);
+                \foreach \x/\y in {0.5/1, 1/0.5, 1.5/1.5, 2/1} {
+                    \fill[blue!50!red] (\x,\y) circle (2pt);
+                }
+                \foreach \x/\y in {2.5/3, 3/2.5, 3.5/3.5} {
+                    \fill[blue!50!green] (\x,\y) circle (2pt);
+                }
+                \fill[red] (1.2,1) circle (4pt);
+                \fill[red] (3,3) circle (4pt);
+                \node at (2,-0.5) {Asignación};
+            \end{scope}
+            
+            % Iteración 3
+            \begin{scope}[xshift=10cm]
+                \draw[gray!30] (0,0) rectangle (4,4);
+                \foreach \x/\y in {0.5/1, 1/0.5, 1.5/1.5, 2/1} {
+                    \fill[blue!50!red] (\x,\y) circle (2pt);
+                }
+                \foreach \x/\y in {2.5/3, 3/2.5, 3.5/3.5} {
+                    \fill[blue!50!green] (\x,\y) circle (2pt);
+                }
+                \fill[red] (1.3,0.9) circle (4pt);
+                \fill[red] (3.2,3) circle (4pt);
+                \node at (2,-0.5) {Actualización};
+            \end{scope}
+            
+            % Iteración final
+            \begin{scope}[xshift=15cm]
+                \draw[gray!30] (0,0) rectangle (4,4);
+                \foreach \x/\y in {0.5/1, 1/0.5, 1.5/1.5, 2/1} {
+                    \fill[blue!50!red] (\x,\y) circle (2pt);
+                }
+                \foreach \x/\y in {2.5/3, 3/2.5, 3.5/3.5} {
+                    \fill[blue!50!green] (\x,\y) circle (2pt);
+                }
+                \fill[red] (1.25,1) circle (4pt);
+                \fill[red] (3,2.9) circle (4pt);
+                \node at (2,-0.5) {Convergencia};
+            \end{scope}
+        \end{tikzpicture}
+    \end{center}
+    
+    \textbf{Evolución:} Los centroides se mueven hacia el centro de sus clusters asignados hasta estabilizarse.
+\end{frame}
+
+\section{Propiedades de convergencia}
+
+\begin{frame}{Teorema de convergencia finita}
+    \begin{teorema}[Selim \& Ismail, 1984]
+        El algoritmo de K-means (Lloyd) converge en un \textbf{número finito de iteraciones} para cualquier métrica, bajo la condición de que no haya empates en la asignación.
+    \end{teorema}
+    
+    \begin{block}{Idea de la demostración}
+        \begin{enumerate}
+            \item El número de particiones posibles de \(n\) puntos en \(K\) clusters es \textbf{finito}.
+            \item Cada iteración (asignación + actualización) \textbf{reduce} estrictamente la función de costo \(J\), o el algoritmo se detiene.
+            \item Si \(J\) no puede disminuir indefinidamente (está acotada inferiormente por 0), el algoritmo debe alcanzar un mínimo local tras un número finito de pasos.
+        \end{enumerate}
+    \end{block}
+    
+    \begin{alertblock}{Importante}
+        El algoritmo converge a un \textbf{mínimo local}, no necesariamente al mínimo global. El resultado final depende de la inicialización.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{¿Por qué solo mínimo local?}
+    \begin{itemize}
+        \item La función \(J(C, \mu)\) no es convexa debido a la asignación discreta de puntos a clusters.
+        \item El algoritmo es un caso especial de \textbf{descenso por coordenadas} (coordinate descent):
+        \begin{itemize}
+            \item Paso de asignación: minimiza \(J\) sobre las asignaciones manteniendo fijos los centroides.
+            \item Paso de actualización: minimiza \(J\) sobre los centroides manteniendo fijas las asignaciones.
+        \end{itemize}
+        \item Cada paso reduce \(J\), pero el algoritmo puede quedar atrapado en un mínimo local.
+    \end{itemize}
+    
+    \begin{center}
+        \begin{tikzpicture}[scale=0.6]
+            \begin{axis}[
+                xlabel={Iteración},
+                ylabel={\(J\)},
+                xmin=0, xmax=10,
+                ymin=0, ymax=100,
+                width=8cm, height=5cm,
+                grid=both
+            ]
+            \addplot[blue, thick, mark=*] coordinates {
+                (0,95) (1,70) (2,52) (3,40) (4,33) (5,28) (6,25) (7,23) (8,22) (9,21.5) (10,21.5)
+            };
+            \end{axis}
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Condiciones de optimalidad}
+    \begin{definicion}[Punto de Kuhn-Tucker]
+        Una solución \((\{C_j\}, \{\mu_j\})\) es un punto de Kuhn-Tucker (condición necesaria de optimalidad) si:
+        \begin{enumerate}
+            \item Para cada \(j\), \(\mu_j = \frac{1}{|C_j|} \sum_{x_i \in C_j} x_i\) (condición de centroide).
+            \item Para cada \(x_i \in C_j\), \(\norm{x_i - \mu_j} \leq \norm{x_i - \mu_\ell}\) para todo \(\ell \neq j\) (condición de asignación óptima).
+        \end{enumerate}
+    \end{definicion}
+    
+    \begin{teorema}[Selim \& Ismail, 1984]
+        Bajo condiciones de diferenciabilidad, el algoritmo de K-means converge a un punto de Kuhn-Tucker. Si además la función es convexa en cada región de asignación, se alcanza un mínimo local.
+    \end{teorema}
+\end{frame}
+
+\section{Inicialización y sensibilidad}
+
+\begin{frame}{Problema de la inicialización}
+    \begin{center}
+        \textbf{El algoritmo es muy sensible a la elección inicial de los centroides.}
+    \end{center}
+    
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Mala inicialización:}
+        \begin{itemize}
+            \item Centroides lejos de los datos
+            \item Clusters vacíos
+            \item Mínimo local pobre
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{Buena inicialización:}
+        \begin{itemize}
+            \item Centroides cerca de los datos
+            \item Convergencia rápida
+            \item Mejor solución
+        \end{itemize}
+    \end{columns}
+    
+    \vspace{0.3cm}
+    \begin{exampleblock}{Ejemplo}
+        Con \(K=3\) y datos con 3 grupos naturales, si dos centroides iniciales caen en el mismo grupo, ese grupo se partirá artificialmente y otro grupo quedará sin representante.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Métodos de inicialización comunes}
+    \begin{itemize}
+        \item \textbf{Aleatoria simple:} Elegir \(K\) puntos al azar del conjunto de datos.
+        \begin{itemize}
+            \item Simple pero puede dar malos resultados.
+        \end{itemize}
+        
+        \item \textbf{Método de Forgy:} Elegir \(K\) observaciones al azar como centroides iniciales.
+        \begin{itemize}
+            \item Similar a la aleatoria simple.
+        \end{itemize}
+        
+        \item \textbf{Inicialización por partición aleatoria:} Asignar cada punto a un cluster aleatoriamente, luego calcular medias.
+        
+        \item \textbf{K-means++:} Inicialización probabilística que maximiza la distancia entre centroides [Arthur \& Vassilvitskii, 2007].
+        \begin{itemize}
+            \item Primero elige un centroide al azar.
+            \item Cada nuevo centroide se elige con probabilidad proporcional al cuadrado de la distancia al centroide más cercano ya elegido.
+            \item Garantiza una solución \(O(\log K)\)-competitiva.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Algoritmo K-means++}
+    \begin{block}{Inicialización K-means++}
+        \textbf{Entrada:} Datos \(X\), número de clusters \(K\).
+        
+        \begin{enumerate}
+            \item Elegir el primer centroide \(\mu_1\) uniformemente al azar de \(X\).
+            \item Para \(j = 2\) hasta \(K\):
+            \begin{itemize}
+                \item Para cada punto \(x\), calcular \(D(x) = \min_{\ell < j} \norm{x - \mu_\ell}^2\).
+                \item Elegir el siguiente centroide \(\mu_j\) de \(X\) con probabilidad \(\frac{D(x)}{\sum_{x' \in X} D(x')}\).
+            \end{itemize}
+        \end{enumerate}
+        
+        Luego ejecutar K-means estándar con estos centroides iniciales.
+    \end{block}
+    
+    \textbf{Ventaja:} Mejora significativamente la calidad y la consistencia de los resultados.
+\end{frame}
+
+\section{Elección del número de clusters \(K\)}
+
+\begin{frame}{¿Cómo elegir \(K\)?}
+    \begin{itemize}
+        \item En aplicaciones reales, normalmente \textbf{no sabemos} el número óptimo de clusters.
+        \item Necesitamos métodos para determinar un \(K\) adecuado.
+        \item Compromiso:
+        \begin{itemize}
+            \item \(K\) muy pequeño: sub-agrupamiento (underfitting).
+            \item \(K\) muy grande: sobre-agrupamiento (overfitting).
+        \end{itemize}
+    \end{itemize}
+    
+    \begin{center}
+        \textbf{Buscamos un equilibrio entre simplicidad y fidelidad a los datos.}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Método del codo (Elbow Method)}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \begin{enumerate}
+            \item Ejecutar K-means para \(K = 1, 2, \ldots, K_{max}\).
+            \item Calcular la inercia \(J(K)\) para cada \(K\).
+            \item Graficar \(J(K)\) vs \(K\).
+            \item Buscar el "codo": punto donde la mejora empieza a ser marginal.
+        \end{enumerate}
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.8]
+            \begin{axis}[
+                xlabel={\(K\)},
+                ylabel={Inercia \(J(K)\)},
+                xmin=1, xmax=8,
+                ymin=0, ymax=100,
+                xtick={1,2,3,4,5,6,7,8},
+                width=6cm, height=5cm,
+                grid=both
+            ]
+            \addplot[blue, thick, mark=*] coordinates {
+                (1,95) (2,60) (3,35) (4,22) (5,18) (6,15) (7,13) (8,11.5)
+            };
+            \draw[red, dashed, thick] (axis cs:3,35) -- (axis cs:3,0);
+            \node[red] at (axis cs:3.5,40) {Codo};
+            \end{axis}
+        \end{tikzpicture}
+    \end{columns}
+    
+    \begin{itemize}
+        \item El "codo" indica el \(K\) donde la ganancia de añadir más clusters deja de ser significativa.
+        \item Subjetivo: a veces no hay un codo claro.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Coeficiente de silueta}
+    \begin{definicion}
+        Para un punto \(x_i\) en el cluster \(C_j\):
+        \begin{itemize}
+            \item \(a(i) =\) distancia media de \(x_i\) a los demás puntos de su mismo cluster (cohesión).
+            \item \(b(i) =\) distancia media de \(x_i\) a los puntos del cluster vecino más cercano (separación).
+        \end{itemize}
+        Coeficiente de silueta:
+        \[
+        s(i) = \frac{b(i) - a(i)}{\max\{a(i), b(i)\}} \in [-1, 1]
+        \]
+    \end{definicion}
+    
+    \textbf{Interpretación:}
+    \begin{itemize}
+        \item \(s(i) \approx 1\): punto bien clasificado.
+        \item \(s(i) \approx 0\): punto en la frontera entre dos clusters.
+        \item \(s(i) < 0\): punto probablemente mal clasificado.
+    \end{itemize}
+    
+    \textbf{Métrica global:} Silueta promedio para todos los puntos. Elegir \(K\) que maximice la silueta promedio.
+\end{frame}
+
+\begin{frame}{Comparación de métodos para elegir \(K\)}
+    \begin{table}
+        \centering
+        \begin{tabular}{|l|c|c|}
+            \hline
+            \textbf{Método} & \textbf{Ventajas} & \textbf{Desventajas} \\
+            \hline
+            Método del codo & Simple, intuitivo & Subjetivo \\
+            Silueta & Objetivo, interpretable & Costoso computacionalmente \\
+            Estadístico Gap & Riguroso estadísticamente & Complejo \\
+            Regla de la raíz de \(n/2\) & Muy simple & Heurística sin garantías \\
+            \hline
+        \end{tabular}
+    \end{table}
+    
+    \textbf{Recomendación:} Usar múltiples métodos y validación cruzada cuando sea posible.
+\end{frame}
+
+\section{Complejidad computacional}
+
+\begin{frame}{Análisis de complejidad}
+    \begin{block}{Por iteración}
+        \begin{itemize}
+            \item \textbf{Asignación:} Calcular distancia de cada punto a cada centroide: \(O(n \cdot K \cdot d)\)
+            \begin{itemize}
+                \item \(n\): número de puntos
+                \item \(K\): número de clusters
+                \item \(d\): dimensionalidad
+            \end{itemize}
+            \item \textbf{Actualización:} Recalcular medias: \(O(n \cdot d)\)
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Complejidad total}
+        \(O(t \cdot n \cdot K \cdot d)\), donde \(t\) es el número de iteraciones hasta convergencia.
+    \end{block}
+    
+    \begin{itemize}
+        \item En la práctica, \(t\) suele ser pequeño (10-100 iteraciones).
+        \item El algoritmo escala linealmente con \(n\), lo que lo hace adecuado para grandes conjuntos de datos.
+        \item Para datos muy grandes, existen variantes como \textbf{mini-batch K-means} que usan submuestras.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Comparación con otros algoritmos}
+    \begin{table}
+        \centering
+        \begin{tabular}{|l|c|c|c|}
+            \hline
+            \textbf{Algoritmo} & \textbf{Complejidad} & \textbf{Ventajas} & \textbf{Desventajas} \\
+            \hline
+            K-means & \(O(t n K d)\) & Rápido, simple & Asume clusters esféricos \\
+            K-medoids & \(O(t (n-K)^2 K d)\) & Robusto a outliers & Lento \\
+            DBSCAN & \(O(n \log n)\) & No requiere \(K\) & Sensible a parámetros \\
+            Jerárquico & \(O(n^3)\) & Dendrograma & Muy lento \\
+            \hline
+        \end{tabular}
+    \end{table}
+    
+    \textbf{K-means es el más eficiente para grandes volúmenes de datos cuando los clusters son aproximadamente esféricos.}
+\end{frame}
+
+\section{Variantes y extensiones}
+
+\begin{frame}{Mini-batch K-means}
+    \begin{block}{Idea}
+        En lugar de usar todos los datos en cada iteración, usar pequeños subconjuntos aleatorios (mini-batches).
+    \end{block}
+    
+    \textbf{Algoritmo:}
+    \begin{enumerate}
+        \item Inicializar centroides (ej. con K-means++).
+        \item Repetir hasta convergencia:
+        \begin{itemize}
+            \item Seleccionar un mini-batch \(M\) de tamaño \(b \ll n\).
+            \item Asignar cada punto de \(M\) al centroide más cercano.
+            \item Actualizar centroides usando solo los puntos de \(M\) con una tasa de aprendizaje.
+        \end{itemize}
+    \end{enumerate}
+    
+    \begin{teorema}[Tang \& Monteleoni, 2017]
+        Mini-batch K-means converge a una solución local óptima con tasa \(O(1/t)\) bajo condiciones generales.
+    \end{teorema}
+    
+    \textbf{Ventaja:} Mucho más rápido para grandes conjuntos de datos.
+\end{frame}
+
+\begin{frame}{Online K-means (aprendizaje en línea)}
+    \begin{block}{Configuración}
+        Los datos llegan en flujo (streaming), uno a uno.
+    \end{block}
+    
+    \begin{block}{Actualización para cada nuevo punto \(x\)}
+        \begin{enumerate}
+            \item Encontrar el centroide más cercano: \(j = \argmin_\ell \norm{x - \mu_\ell}\)
+            \item Actualizar ese centroide:
+            \[
+            \mu_j \leftarrow \mu_j - \eta_j (\mu_j - x)
+            \]
+            donde \(\eta_j\) es una tasa de aprendizaje (p.ej., \(1/N_j\), siendo \(N_j\) el número de veces que se ha actualizado \(\mu_j\)).
+        \end{enumerate}
+    \end{block}
+    
+    \begin{teorema}[Dasgupta et al., 2022]
+        El online K-means puede interpretarse como un descenso por gradiente estocástico y converge asintóticamente al conjunto de puntos estacionarios de la función de costo.
+    \end{teorema}
+\end{frame}
+
+\begin{frame}{Kernel K-means}
+    \begin{itemize}
+        \item K-means estándar asume que los clusters son linealmente separables en el espacio original.
+        \item \textbf{Kernel K-means} proyecta los datos a un espacio de características de mayor dimensión mediante una función kernel \(\phi\).
+    \end{itemize}
+    
+    \begin{block}{Objetivo en espacio kernel}
+        \[
+        J = \sum_{j=1}^K \sum_{x_i \in C_j} \norm{\phi(x_i) - \mu_j^\phi}^2
+        \]
+        donde \(\mu_j^\phi = \frac{1}{|C_j|} \sum_{x_i \in C_j} \phi(x_i)\).
+    \end{block}
+    
+    \begin{itemize}
+        \item Usando el truco del kernel, podemos calcular distancias sin necesidad de conocer \(\phi\) explícitamente.
+        \item Permite detectar clusters con formas no lineales.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{K-medoids y K-medians}
+    \begin{description}
+        \item[K-medoids:] En lugar de la media, usa un punto real del conjunto como centroide (el \textit{medoide}). Más robusto a outliers.
+        
+        \item[K-medians:] Minimiza la suma de distancias \(L_1\) (mediana) en lugar de \(L_2\). Útil cuando los datos tienen colas pesadas.
+    \end{description}
+    
+    \begin{table}
+        \centering
+        \begin{tabular}{|l|c|c|}
+            \hline
+            \textbf{Métrica} & \textbf{K-means} & \textbf{K-medians} \\
+            \hline
+            Distancia & Euclídea (\(L_2\)) & Manhattan (\(L_1\)) \\
+            Centroide & Media & Mediana \\
+            Robustez & Baja & Alta \\
+            \hline
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\section{Aplicaciones y ejemplos}
+
+\begin{frame}{Aplicación 1: Segmentación de clientes}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Problema:} Una empresa quiere agrupar a sus clientes según:
+        \begin{itemize}
+            \item Ingreso anual
+            \item Gasto anual
+            \item Frecuencia de compra
+        \end{itemize}
+        
+        \textbf{Objetivo:} Diseñar estrategias de marketing específicas para cada segmento.
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.7]
+            \begin{axis}[
+                xlabel={Ingreso},
+                ylabel={Gasto},
+                width=5cm, height=5cm,
+                grid=both
+            ]
+            \addplot[only marks, mark=*, blue] coordinates {
+                (20,5) (25,8) (30,6) (22,7) (28,10) (35,15) (40,18) (38,20) (42,22)
+                (50,30) (55,35) (60,32) (58,38) (52,33)
+            };
+            \end{axis}
+        \end{tikzpicture}
+    \end{columns}
+    
+    \textbf{Resultado:} Segmentos como "clientes jóvenes con alto gasto", "clientes mayores conservadores", etc.
+\end{frame}
+
+\begin{frame}{Aplicación 2: Compresión de imágenes}
+    \begin{itemize}
+        \item Cada píxel es un punto en el espacio RGB (3 dimensiones).
+        \item Aplicar K-means con \(K\) pequeño (ej. 16, 32, 64 colores).
+        \item Reemplazar cada píxel por el color de su centroide más cercano.
+    \end{itemize}
+    
+    \begin{center}
+        \begin{tikzpicture}
+            \draw[fill=red!80] (0,0) rectangle (2,2);
+            \draw[fill=red!60] (2,0) rectangle (4,2);
+            \draw[fill=red!40] (4,0) rectangle (6,2);
+            \node at (1,-0.5) {Original};
+            \node at (3,-0.5) {\(K=16\)};
+            \node at (5,-0.5) {\(K=4\)};
+        \end{tikzpicture}
+    \end{center}
+    
+    \textbf{Resultado:} Reducción del tamaño del archivo manteniendo calidad aceptable.
+\end{frame}
+
+\begin{frame}{Aplicación 3: Detección de anomalías}
+    \begin{itemize}
+        \item Entrenar K-means con datos normales.
+        \item Para un nuevo punto, medir su distancia al centroide más cercano.
+        \item Si la distancia supera un umbral, marcar como anomalía.
+    \end{itemize}
+    
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \draw[gray!30] (0,0) rectangle (5,4);
+            \foreach \x/\y in {1/1, 1.2/1.3, 0.8/0.9, 1.5/1.8, 1.8/1.2, 2.2/2.5, 2.5/2.8, 2.3/2, 2.8/2.2, 3.2/3, 3.5/3.2, 3/2.8} {
+                \fill[blue] (\x,\y) circle (2pt);
+            }
+            \fill[red] (4.5,3.5) circle (4pt);
+            \draw[->, thick, red] (4.5,3.5) -- (2.5,2.2);
+            \node[red] at (4.5,3.8) {Anomalía};
+        \end{tikzpicture}
+    \end{center}
+    
+    \textbf{Aplicaciones:} Detección de fraudes, intrusiones en redes, fallos en maquinaria.
+\end{frame}
+
+\section{Limitaciones y consideraciones}
+
+\begin{frame}{Limitaciones de K-means}
+    \begin{itemize}
+        \item \textbf{Asume clusters esféricos:} Funciona mal con clusters alargados o con formas complejas.
+        \item \textbf{Sensible a la escala:} Requiere normalización de características.
+        \item \textbf{Sensible a outliers:} La media es afectada por valores extremos.
+        \item \textbf{Requiere especificar \(K\):} No siempre es conocido.
+        \item \textbf{Convergencia a mínimo local:} Depende de la inicialización.
+        \item \textbf{Datos categóricos:} No funciona directamente (requiere transformación).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Cuándo usar K-means}
+    \begin{block}{Casos favorables}
+        \begin{itemize}
+            \item Clusters aproximadamente esféricos y de tamaño similar.
+            \item Datos numéricos en espacios de baja/media dimensión.
+            \item Grandes volúmenes de datos (escalabilidad).
+            \item Necesidad de interpretabilidad (centroides como representantes).
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Casos desfavorables}
+        \begin{itemize}
+            \item Clusters con formas complejas o anidadas.
+            \item Datos con outliers significativos.
+            \item Datos categóricos sin codificación adecuada.
+            \item Cuando se desconoce \(K\) y no hay método claro para determinarlo.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\section{Resumen y conclusiones}
+
+\begin{frame}{Resumen}
+    \begin{itemize}
+        \item \textbf{K-means} es un algoritmo de clustering particional que minimiza la suma de cuadrados intra-cluster.
+        \item \textbf{Algoritmo de Lloyd:} iteraciones de asignación y actualización.
+        \item \textbf{Convergencia:} finita a un mínimo local, no necesariamente global.
+        \item \textbf{Sensible a:} inicialización (K-means++ ayuda) y elección de \(K\) (elbow, silueta).
+        \item \textbf{Complejidad:} \(O(t n K d)\), escalable a grandes conjuntos.
+        \item \textbf{Variantes:} Mini-batch, online, kernel, k-medoids.
+        \item \textbf{Aplicaciones:} segmentación, compresión, detección de anomalías.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Referencias clave}
+    \begin{thebibliography}{9}
+        \bibitem{lloyd1982} Lloyd, S. P. (1982). Least squares quantization in PCM. \textit{IEEE Transactions on Information Theory}.
+        
+        \bibitem{selim1984} Selim, S. Z. \& Ismail, M. A. (1984). K-means-type algorithms: A generalized convergence theorem and characterization of local optimality. \textit{IEEE Transactions on Pattern Analysis and Machine Intelligence}.
+        
+        \bibitem{arthur2007} Arthur, D. \& Vassilvitskii, S. (2007). K-means++: The advantages of careful seeding. \textit{SODA}.
+    \end{thebibliography}
+\end{frame}
+
+\begin{frame}{Referencias clave}
+    \begin{thebibliography}{9}
+        \bibitem{bottou1995} Bottou, L. \& Bengio, Y. (1995). Convergence properties of the K-means algorithms. \textit{NIPS}.
+        
+        \bibitem{dasgupta2022} Dasgupta, S., Mahajan, G. \& So, G. (2022). Convergence of online k-means. \textit{arXiv:2202.10640}.
+        
+        \bibitem{tang2017} Tang, C. \& Monteleoni, C. (2017). Convergence rate of stochastic k-means. \textit{arXiv:1611.05132}.
+    \end{thebibliography}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,1194 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{mathrsfs}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{dsfont} % Para operadores como \mathds{1}
+\usepackage{bbm} % Para indicadores
+\usepackage{mathtools} % Para herramientas matemáticas avanzadas
+
+% Estilo IHES: elegante y simple
+\geometry{a4paper, margin=1in}
+
+% Entornos de teoremas
+\theoremstyle{plain}
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{proposition}[theorem]{Proposición}
+\newtheorem{lemma}[theorem]{Lema}
+\newtheorem{corollary}[theorem]{Corolario}
+\newtheorem{definition}[theorem]{Definición}
+\newtheorem{remark}[theorem]{Observación}
+\newtheorem{example}[theorem]{Ejemplo}
+
+% Entornos para demostraciones
+\newenvironment{proof}{\paragraph{Demostración:}}{\hfill$\square$}
+
+% Comandos personalizados
+\newcommand{\X}{\mathbf{X}}
+\newcommand{\bff}{\mathbf{b}}
+\newcommand{\bfv}{\mathbf{v}}
+\newcommand{\bfn}{\mathbf{n}}
+\newcommand{\bffhat}{\hat{\bff}}
+\newcommand{\bfvhat}{\hat{\bfv}}
+\newcommand{\bfx}{\mathbf{x}}
+\newcommand{\bfA}{\mathbf{A}}
+\newcommand{\bfB}{\mathbf{B}}
+\newcommand{\bfC}{\mathbf{C}}
+\newcommand{\bfI}{\mathbf{I}}
+\newcommand{\bfU}{\mathbf{U}}
+\newcommand{\bfX}{\mathbf{X}}
+\newcommand{\bfmu}{\boldsymbol{\mu}}
+\newcommand{\bfSigma}{\boldsymbol{\Sigma}}
+\newcommand{\bfLambda}{\boldsymbol{\Lambda}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\rank}{\operatorname{rank}}
+
+% Comandos adicionales para el apéndice
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\cZ}{\mathcal{Z}}
+\newcommand{\bK}{\mathbf{K}}
+\newcommand{\bI}{\mathbf{I}}
+\newcommand{\bW}{\mathbf{W}}
+\newcommand{\bZ}{\mathbf{Z}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bL}{\mathbf{L}}
+\newcommand{\bS}{\mathbf{S}}
+\newcommand{\bU}{\mathbf{U}}
+\newcommand{\bV}{\mathbf{V}}
+\newcommand{\bSigma}{\boldsymbol{\Sigma}}
+\newcommand{\bLambda}{\boldsymbol{\Lambda}}
+\newcommand{\btheta}{\boldsymbol{\theta}}
+\newcommand{\bphi}{\boldsymbol{\phi}}
+\newcommand{\bpsi}{\boldsymbol{\psi}}
+\newcommand{\bepsilon}{\boldsymbol{\epsilon}}
+\newcommand{\blambda}{\boldsymbol{\lambda}}
+\newcommand{\bmu}{\boldsymbol{\mu}}
+\newcommand{\bnu}{\boldsymbol{\nu}}
+\newcommand{\bxi}{\boldsymbol{\xi}}
+\newcommand{\bzeta}{\boldsymbol{\zeta}}
+\newcommand{\bomega}{\boldsymbol{\omega}}
+\newcommand{\bOmega}{\boldsymbol{\Omega}}
+\newcommand{\bGamma}{\boldsymbol{\Gamma}}
+\newcommand{\bDelta}{\boldsymbol{\Delta}}
+\newcommand{\bTheta}{\boldsymbol{\Theta}}
+\newcommand{\bPi}{\boldsymbol{\Pi}}
+\newcommand{\bPhi}{\boldsymbol{\Phi}}
+\newcommand{\bPsi}{\boldsymbol{\Psi}}
+\newcommand{\bSigmaH}{\hat{\bSigma}}
+\newcommand{\bLambdaH}{\hat{\bLambda}}
+\newcommand{\bGammaH}{\hat{\bGamma}}
+\newcommand{\bDeltaH}{\hat{\bDelta}}
+\newcommand{\bThetaH}{\hat{\bTheta}}
+\newcommand{\bPiH}{\hat{\bPi}}
+\newcommand{\bPhiH}{\hat{\bPhi}}
+\newcommand{\bPsiH}{\hat{\bPsi}}
+\newcommand{\bOmegaH}{\hat{\bOmega}}
+\newcommand{\bxiH}{\hat{\bxi}}
+\newcommand{\bzetaH}{\hat{\bzeta}}
+\newcommand{\bomegaH}{\hat{\bomega}}
+\newcommand{\bepsilonH}{\hat{\bepsilon}}
+\newcommand{\blambdaH}{\hat{\blambda}}
+\newcommand{\bmuH}{\hat{\bmu}}
+\newcommand{\bnuH}{\hat{\bnu}}
+\newcommand{\bSigmaT}{\tilde{\bSigma}}
+\newcommand{\bLambdaT}{\tilde{\bLambda}}
+\newcommand{\bGammaT}{\tilde{\bGamma}}
+\newcommand{\bDeltaT}{\tilde{\bDelta}}
+\newcommand{\bThetaT}{\tilde{\bTheta}}
+\newcommand{\bPiT}{\tilde{\bPi}}
+\newcommand{\bPhiT}{\tilde{\bPhi}}
+\newcommand{\bPsiT}{\tilde{\bPsi}}
+\newcommand{\bOmegaT}{\tilde{\bOmega}}
+\newcommand{\bxiT}{\tilde{\bxi}}
+\newcommand{\bzetaT}{\tilde{\bzeta}}
+\newcommand{\bomegaT}{\tilde{\bomega}}
+\newcommand{\bepsilonT}{\tilde{\bepsilon}}
+\newcommand{\blambdaT}{\tilde{\blambda}}
+\newcommand{\bmuT}{\tilde{\bmu}}
+\newcommand{\bnuT}{\tilde{\bnu}}
+\newcommand{\KL}{\operatorname{KL}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\sign}{\operatorname{sign}}
+\newcommand{\soft}{\operatorname{soft}}
+\newcommand{\prox}{\operatorname{prox}}
+\newcommand{\argmin}{\operatorname{argmin}}
+\newcommand{\argmax}{\operatorname{argmax}}
+\newcommand{\TV}{\operatorname{TV}}
+\newcommand{\Corr}{\operatorname{Corr}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Nn}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\cZ}{\mathcal{Z}}
+
+\title{Análisis por Componentes Principales}
+\author{César Galindo}
+\date{2 Marzo}
+
+\begin{document}
+
+\maketitle
+
+\section{Introducción}
+
+Sea \(\X = (X_1, X_2, \dots, X_r)^\top\) un vector aleatorio en \(\R^r\) con media \(\bfmu_X = \E[\X]\) y matriz de covarianzas \(\bfSigma_{\X\X} = \E[(\X - \bfmu_X)(\X - \bfmu_X)^\top]\). El Análisis de Componentes Principales (PCA, por sus siglas en inglés) es una técnica para reducir la dimensionalidad de \(\X\) reemplazando las \(r\) variables (posiblemente correlacionadas) con un número menor \(t \le r\) de proyecciones lineales no correlacionadas, llamadas \textit{componentes principales}, que capturan la mayor cantidad posible de variabilidad en \(\X\).
+
+La variabilidad total en \(\X\) se mide mediante la suma de las varianzas de sus componentes:
+\[
+\operatorname{tr}(\bfSigma_{\X\X}) = \sum_{j=1}^r \Var(X_j).
+\]
+
+\section{Descomposición Espectrals}
+
+\begin{theorem}[Descomposición Espectral]
+\label{thm:spectral}
+Sea \(\bfSigma_{\X\X}\) una matriz \(r \times r\) simétrica semidefinida positiva. Entonces existe una matriz ortogonal \(\bfU\) (es decir, \(\bfU^\top \bfU = \bfI_r\)) y una matriz diagonal \(\bfLambda = \operatorname{diag}(\lambda_1, \lambda_2, \dots, \lambda_r)\) con \(\lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_r \ge 0\) tales que
+\[
+\bfSigma_{\X\X} = \bfU \bfLambda \bfU^\top.
+\]
+Los \(\lambda_j\) son los eigenvalores de \(\bfSigma_{\X\X}\) y las columnas \(\bfv_1, \dots, \bfv_r\) de \(\bfU\) son los correspondientes **eigenvectores**.
+\end{theorem}
+
+\begin{proof}
+Este es un resultado estándar en álgebra lineal. Dado que \(\bfSigma_{\X\X}\) es simétrica, es diagonalizable por una matriz ortogonal. La condición de ser semidefinida positiva garantiza que los eigenvalores sean no negativos.
+\end{proof}
+
+Del Teorema~\ref{thm:spectral}, obtenemos inmediatamente:
+\[
+\tr(\bfSigma_{\X\X}) = \tr(\bfU \bfLambda \bfU^\top) = \tr(\bfLambda \bfU^\top \bfU) = \tr(\bfLambda) = \sum_{j=1}^r \lambda_j.
+\]
+
+\begin{definition}[Componentes Principales]
+Para \(j = 1, 2, \dots, r\), el \(j\)-ésimo \textit{componente principal} de \(\X\) es la proyección lineal
+\[
+\xi_j = \bff_j^\top \X = b_{j1} X_1 + \cdots + b_{jr} X_r,
+\]
+donde los vectores de coeficientes \(\bff_1, \dots, \bff_r\) se eligen de manera que:
+\begin{enumerate}
+    \item \(\Var(\xi_1) \ge \Var(\xi_2) \ge \dots \ge \Var(\xi_r)\);
+    \item \(\xi_j\) no está correlacionado con \(\xi_k\) para todo \(k < j\), es decir, \(\Cov(\xi_j, \xi_k) = 0\);
+    \item Para cada \(j\), \(\bff_j^\top \bff_j = 1\) (normalización).
+\end{enumerate}
+\end{definition}
+
+\section{PCA: Maximización de Varianza}
+
+A continuación, derivamos los componentes principales secuencialmente maximizando la varianza sujeta a restricciones de ortogonalidad.
+
+\begin{proposition}[Primer Componente Principal]
+\label{prop:first}
+Sea \(\bfSigma_{\X\X}\) con eigenvalores \(\lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_r\) y correspondientes eigenvectores ortonormales \(\bfv_1, \bfv_2, \dots, \bfv_r\). El vector \(\bff_1\) que maximiza \(\Var(\bff_1^\top \X) = \bff_1^\top \bfSigma_{\X\X} \bff_1\) sujeto a \(\bff_1^\top \bff_1 = 1\) es \(\bff_1 = \bfv_1\), el eigenvector asociado al eigenvalor más grande \(\lambda_1\). Además, la varianza máxima alcanzada es \(\lambda_1\).
+\end{proposition}
+
+\begin{proof}
+Resolvemos el problema de optimización con restricciones usando un multiplicador de Lagrange. Definimos el lagrangiano
+\[
+\mathcal{L}(\bff_1, \lambda_1) = \bff_1^\top \bfSigma_{\X\X} \bff_1 + \lambda_1 (1 - \bff_1^\top \bff_1).
+\]
+Derivando con respecto a \(\bff_1\) (usando identidades de cálculo matricial) obtenemos
+\[
+\frac{\partial \mathcal{L}}{\partial \bff_1} = 2\bfSigma_{\X\X} \bff_1 - 2\lambda_1 \bff_1 = 2(\bfSigma_{\X\X} - \lambda_1 \bfI_r)\bff_1.
+\]
+Igualando la derivada a cero obtenemos la ecuación de eigenvalores
+\[
+\bfSigma_{\X\X} \bff_1 = \lambda_1 \bff_1.
+\]
+Por lo tanto, \(\lambda_1\) debe ser un eigenvalor de \(\bfSigma_{\X\X}\) y \(\bff_1\) un eigenvector correspondiente. Para maximizar la varianza \(\bff_1^\top \bfSigma_{\X\X} \bff_1 = \lambda_1 \bff_1^\top \bff_1 = \lambda_1\), elegimos \(\lambda_1\) como el eigenvalor más grande. Por consiguiente, \(\bff_1 = \bfv_1\) (salvo signo) y \(\Var(\xi_1) = \lambda_1\).
+\end{proof}
+
+\begin{proposition}[Segundo Componente Principal]
+\label{prop:second}
+Sea \(\bff_1 = \bfv_1\) como antes. El vector \(\bff_2\) que maximiza \(\Var(\bff_2^\top \X) = \bff_2^\top \bfSigma_{\X\X} \bff_2\) sujeto a \(\bff_2^\top \bff_2 = 1\) y \(\Cov(\bff_1^\top \X, \bff_2^\top \X) = \bff_1^\top \bfSigma_{\X\X} \bff_2 = 0\) es \(\bff_2 = \bfv_2\), el eigenvector asociado al segundo eigenvalor más grande \(\lambda_2\). Además, \(\Var(\xi_2) = \lambda_2\).
+\end{proposition}
+
+\begin{proof}
+La condición \(\bff_1^\top \bfSigma_{\X\X} \bff_2 = 0\) se simplifica usando la Proposición~\ref{prop:first}. Dado que \(\bfSigma_{\X\X} \bff_1 = \lambda_1 \bff_1\), tenemos
+\[
+\bff_1^\top \bfSigma_{\X\X} \bff_2 = \lambda_1 \bff_1^\top \bff_2 = 0 \quad \Longrightarrow \quad \bff_1^\top \bff_2 = 0.
+\]
+Así, la condición de no correlación se reduce a la ortogonalidad de los vectores de coeficientes.
+
+Ahora maximizamos \(\bff_2^\top \bfSigma_{\X\X} \bff_2\) sujeto a \(\bff_2^\top \bff_2 = 1\) y \(\bff_1^\top \bff_2 = 0\). Introducimos los multiplicadores de Lagrange \(\lambda_2\) y \(\mu\):
+\[
+\mathcal{L}(\bff_2, \lambda_2, \mu) = \bff_2^\top \bfSigma_{\X\X} \bff_2 + \lambda_2(1 - \bff_2^\top \bff_2) + \mu \, \bff_1^\top \bff_2.
+\]
+Derivando con respecto a \(\bff_2\) obtenemos
+\[
+\frac{\partial \mathcal{L}}{\partial \bff_2} = 2\bfSigma_{\X\X} \bff_2 - 2\lambda_2 \bff_2 + \mu \bff_1 = 0.
+\tag{1}
+\]
+Premultiplicamos (1) por \(\bff_1^\top\):
+\[
+2\bff_1^\top \bfSigma_{\X\X} \bff_2 - 2\lambda_2 \bff_1^\top \bff_2 + \mu \bff_1^\top \bff_1 = 0.
+\]
+Tenemos \(\bff_1^\top \bfSigma_{\X\X} \bff_2 = 0\) (por la restricción de no correlación), \(\bff_1^\top \bff_2 = 0\) (por ortogonalidad) y \(\bff_1^\top \bff_1 = 1\). Por lo tanto, \(\mu = 0\).
+
+Con \(\mu = 0\), la ecuación (1) se reduce a
+\[
+(\bfSigma_{\X\X} - \lambda_2 \bfI_r) \bff_2 = 0.
+\]
+Así, \(\lambda_2\) es un eigenvalor de \(\bfSigma_{\X\X}\) y \(\bff_2\) un eigenvector correspondiente. Dado que \(\bff_2\) debe ser ortogonal a \(\bff_1 = \bfv_1\), no puede ser un múltiplo de \(\bfv_1\). Para maximizar la varianza \(\bff_2^\top \bfSigma_{\X\X} \bff_2 = \lambda_2\), elegimos \(\lambda_2\) como el eigenvalor más grande entre aquellos cuyos eigenvectores son ortogonales a \(\bfv_1\), es decir, \(\lambda_2\) es el segundo eigenvalor más grande, y \(\bff_2 = \bfv_2\).
+\end{proof}
+
+\begin{theorem}[Caracterización de Todos los Componentes Principales]
+\label{thm:pca}
+Sea \(\bfSigma_{\X\X}\) con eigenvalores \(\lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_r \ge 0\) y correspondientes eigenvectores ortonormales \(\bfv_1, \dots, \bfv_r\). Entonces, para \(j = 1, 2, \dots, r\), el \(j\)-ésimo componente principal \(\xi_j\) viene dado por \(\xi_j = \bfv_j^\top \X\). Además:
+\begin{enumerate}
+    \item \(\Var(\xi_j) = \lambda_j\);
+    \item \(\Cov(\xi_j, \xi_k) = 0\) para \(j \ne k\);
+    \item La varianza total es \(\sum_{j=1}^r \Var(\xi_j) = \sum_{j=1}^r \lambda_j = \tr(\bfSigma_{\X\X})\).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Las Proposiciones~\ref{prop:first} y~\ref{prop:second} establecen el resultado para \(j = 1, 2\). El mismo argumento puede repetirse inductivamente. Supongamos que los primeros \(j-1\) componentes principales son \(\xi_k = \bfv_k^\top \X\) para \(k = 1, \dots, j-1\). Para obtener \(\xi_j\), maximizamos \(\Var(\bff_j^\top \X) = \bff_j^\top \bfSigma_{\X\X} \bff_j\) sujeto a \(\bff_j^\top \bff_j = 1\) y \(\Cov(\xi_k, \bff_j^\top \X) = \bfv_k^\top \bfSigma_{\X\X} \bff_j = 0\) para todo \(k < j\). Usando \(\bfSigma_{\X\X} \bfv_k = \lambda_k \bfv_k\), estas restricciones se convierten en \(\lambda_k \bfv_k^\top \bff_j = 0\), es decir, \(\bfv_k^\top \bff_j = 0\). Por lo tanto, \(\bff_j\) debe ser ortogonal a \(\bfv_1, \dots, \bfv_{j-1}\).
+
+A continuación, planteamos un lagrangiano con multiplicadores para la normalización y cada restricción de ortogonalidad. Derivando y premultiplicando por \(\bfv_k^\top\) (para \(k < j\)) se muestra que todos los multiplicadores para las restricciones de ortogonalidad se anulan, quedando la ecuación de eigenvalores \((\bfSigma_{\X\X} - \lambda_j \bfI_r) \bff_j = 0\). Por consiguiente, \(\bff_j\) es un eigenvector ortogonal a los anteriores, lo que obliga a que sea \(\bfv_j\) (salvo signo) y \(\lambda_j\) sea el \(j\)-ésimo eigenvalor más grande. Las propiedades (1)-(3) se siguen directamente de la descomposición espectral.
+\end{proof}
+
+\begin{corollary}[Reducción de Dimensionalidad]
+\label{cor:reduction}
+Para cualquier \(t \le r\), la mejor aproximación de rango \(t\) a \(\X\) (en términos de capturar varianza) viene dada por los primeros \(t\) componentes principales. La proporción de varianza total explicada por estos \(t\) componentes es
+\[
+\frac{\sum_{j=1}^t \lambda_j}{\sum_{j=1}^r \lambda_j}.
+\]
+\end{corollary}
+
+\begin{proof}
+Esto es una consecuencia de las propiedades de optimalidad del PCA: los primeros \(t\) componentes principales maximizan la varianza retenida entre todas las proyecciones lineales \(t\)-dimensionales.
+\end{proof}
+
+\section{Componentes Principales Muestrales}
+
+En la práctica, trabajamos con una muestra aleatoria. Sean \(\{\X_1, \dots, \X_n\}\) copias independientes e id+enticamente distribuídas de \(\X\) con valores observados \(\{\bfx_1, \dots, \bfx_n\}\).
+
+\begin{definition}[Matriz de Covarianzas Muestral]
+La media muestral y la matriz de covarianzas muestral se definen como
+\[
+\hat{\bfmu}_\X = \bar{\bfx} = \frac{1}{n} \sum_{i=1}^n \bfx_i,
+\qquad
+\hat{\bfSigma}_{\X\X} = \frac{1}{n} \sum_{i=1}^n (\bfx_i - \bar{\bfx})(\bfx_i - \bar{\bfx})^\top.
+\]
+Equivalentemente, si \(\bfX_c\) es la matriz \(r \times n\) cuya \(i\)-ésima columna es \(\bfx_i - \bar{\bfx}\), entonces \(\hat{\bfSigma}_{\X\X} = n^{-1} \bfX_c \bfX_c^\top\) (estandarización).
+\end{definition}
+
+\begin{definition}[Componentes Principales Muestrales]
+Sean \(\hat{\lambda}_1 \ge \hat{\lambda}_2 \ge \dots \ge \hat{\lambda}_r\) los eigenvalores de \(\hat{\bfSigma}_{\X\X}\) y \(\hat{\bfv}_1, \dots, \hat{\bfv}_r\) los correspondientes eigenvectores ortonormales. Para cualquier observación \(\bfx\), su \(j\)-ésima \textit{puntuación del componente principal muestral} es
+\[
+\hat{\xi}_j = \hat{\bfv}_j^\top (\bfx - \bar{\bfx}), \quad j = 1, \dots, t.
+\]
+La varianza muestral de la \(j\)-ésima puntuación es \(\hat{\lambda}_j\).
+\end{definition}
+
+\begin{theorem}[Propiedades de los Componentes Principales Muestrales]
+Los componentes principales muestrales satisfacen:
+\begin{enumerate}
+    \item La varianza muestral de \(\hat{\xi}_j\) es \(\hat{\lambda}_j\);
+    \item La covarianza muestral entre \(\hat{\xi}_j\) y \(\hat{\xi}_k\) (\(j \ne k\)) es cero;
+    \item La varianza muestral total es \(\sum_{j=1}^r \hat{\lambda}_j = \tr(\hat{\bfSigma}_{\X\X})\).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Estas propiedades se obtienen aplicando los resultados poblacionales a la distribución empírica que asigna masa \(1/n\) a cada \(\bfx_i\). La matriz de covarianzas muestral de las puntuaciones es \(\hat{\bfn}^\top \hat{\bfSigma}_{\X\X} \hat{\bfn} = \hat{\bfLambda}\), donde \(\hat{\bfv} = (\hat{\bfv}_1, \dots, \hat{\bfv}_r)\) y \(\hat{\bfLambda} = \operatorname{diag}(\hat{\lambda}_1, \dots, \hat{\lambda}_r)\).
+\end{proof}
+
+\begin{definition}[Reconstrucción y Bondad de Ajuste]
+La mejor reconstrucción lineal de rango \(t\) de una observación \(\bfx\) es
+\[
+\hat{\bfx}^{(t)} = \bar{\bfx} + \hat{\bfC}^{(t)} (\bfx - \bar{\bfx}), \quad \text{donde} \quad \hat{\bfC}^{(t)} = \sum_{j=1}^t \hat{\bfv}_j \hat{\bfv}_j^\top.
+\]
+La proporción de varianza muestral total explicada por los últimos \(r-t\) componentes (es decir, la proporción perdida por truncamiento) es
+\[
+\frac{\hat{\lambda}_{t+1} + \cdots + \hat{\lambda}_r}{\hat{\lambda}_1 + \cdots + \hat{\lambda}_r}.
+\]
+\end{definition}
+
+\begin{remark}
+La cantidad \(\hat{\bfC}^{(t)}\) es la matriz de coeficientes de regresión de rango reducido correspondiente a la proyección PCA. Es la proyección ortogonal sobre el subespacio generado por los primeros \(t\) eigenvectores.
+\end{remark}
+
+\section{Interpretación Geométrica}
+
+\subsection{Ejemplos en \(\R^2\)}
+
+\begin{example}[Caso Esférico - Datos Isotrópicos]
+\label{ej:esferico}
+Consideremos \(\X = (X_1, X_2)^\top\) con matriz de covarianzas:
+\[
+\bfSigma_{\X\X} = \begin{pmatrix} \sigma^2 & 0 \\ 0 & \sigma^2 \end{pmatrix} = \sigma^2 \mathbf{I}_2.
+\]
+\textbf{Eigenvalores:} \(\lambda_1 = \lambda_2 = \sigma^2\). \textbf{Eigenvectores:} Cualquier par de vectores ortonormales (por ejemplo, \(\mathbf{v}_1 = (1,0)^\top\), \(\mathbf{v}_2 = (0,1)^\top\)).
+
+\textbf{Interpretación geométrica:} La nube de puntos tiene forma de \textbf{círculo perfecto}. No hay una dirección de máxima varianza privilegiada; todas las direcciones tienen la misma varianza \(\sigma^2\). Los componentes principales no son únicos: cualquier rotación del sistema de coordenadas produce la misma representación. La reducción de dimensionalidad no es útil: si proyectamos sobre cualquier recta, perdemos el 50\% de la varianza.
+\end{example}
+
+\begin{example}[Elipse Alargada - Correlación Alta]
+\label{ej:elipse}
+Consideremos \(\X = (X_1, X_2)^\top\) con matriz de covarianzas:
+\[
+\bfSigma_{\X\X} = \begin{pmatrix} 1 & \rho \\ \rho & 1 \end{pmatrix}, \quad \text{con } \rho = 0.95.
+\]
+\textbf{Eigenvalores:} \(\lambda_1 = 1 + \rho = 1.95\), \(\lambda_2 = 1 - \rho = 0.05\). \textbf{Eigenvectores:}
+\[
+\mathbf{v}_1 = \left(\frac{1}{\sqrt{2}}, \frac{1}{\sqrt{2}}\right)^\top, \quad
+\mathbf{v}_2 = \left(\frac{1}{\sqrt{2}}, -\frac{1}{\sqrt{2}}\right)^\top.
+\]
+
+\textbf{Interpretación geométrica:} La nube de puntos tiene forma de \textbf{elipse extremadamente alargada}. El \textbf{eje mayor} de la elipse está en la dirección de \(\mathbf{v}_1\) (la línea \(X_1 = X_2\)). El \textbf{eje menor} está en la dirección de \(\mathbf{v}_2\) (la línea \(X_1 = -X_2\)). La varianza a lo largo del eje mayor es \(\lambda_1 = 1.95\) (97.5\% de la varianza total). Proyectar sobre \(\mathbf{v}_1\) (el primer componente) captura casi toda la información.
+\end{example}
+
+\begin{example}[Correlación Negativa Perfecta]
+\label{ej:negativa}
+Consideremos \(\X = (X_1, X_2)^\top\) con matriz de covarianzas:
+\[
+\bfSigma_{\X\X} = \begin{pmatrix} 1 & -1 \\ -1 & 1 \end{pmatrix}.
+\]
+\textbf{Eigenvalores:} \(\lambda_1 = 2\), \(\lambda_2 = 0\). \textbf{Eigenvectores:}
+\[
+\mathbf{v}_1 = \left(\frac{1}{\sqrt{2}}, -\frac{1}{\sqrt{2}}\right)^\top, \quad
+\mathbf{v}_2 = \left(\frac{1}{\sqrt{2}}, \frac{1}{\sqrt{2}}\right)^\top.
+\]
+
+\textbf{Interpretación geométrica:} La nube de puntos está perfectamente alineada sobre la \textbf{recta} \(X_1 = -X_2\). El primer componente \(\xi_1 = \frac{1}{\sqrt{2}}(X_1 - X_2)\) captura \textbf{toda} la varianza (\(\lambda_1 = 2\)). El segundo componente \(\xi_2 = \frac{1}{\sqrt{2}}(X_1 + X_2)\) tiene varianza \textbf{cero} (\(\lambda_2 = 0\)): todos los puntos tienen el mismo valor en esta dirección. Geométricamente, los puntos están sobre una línea (subespacio de dimensión 1). El PCA identifica correctamente que la dimensionalidad intrínseca es 1, no 2.
+\end{example}
+
+\subsection{Ejemplos en \(\R^3\)}
+
+\begin{example}[Datos en 3D con un Plano Dominante]
+\label{ej:plano}
+Consideremos \(\X = (X_1, X_2, X_3)^\top\) con matriz de covarianzas:
+\[
+\bfSigma_{\X\X} = \begin{pmatrix} 10 & 0 & 0 \\ 0 & 8 & 0 \\ 0 & 0 & 0.1 \end{pmatrix}.
+\]
+\textbf{Eigenvalores:} \(\lambda_1 = 10\), \(\lambda_2 = 8\), \(\lambda_3 = 0.1\). \textbf{Eigenvectores:} \(\mathbf{v}_1 = (1,0,0)^\top\), \(\mathbf{v}_2 = (0,1,0)^\top\), \(\mathbf{v}_3 = (0,0,1)^\top\).
+
+\textbf{Interpretación geométrica:} La nube de puntos es un \textbf{elipsoide} achatado en la dirección \(X_3\). Los puntos yacen aproximadamente sobre el \textbf{plano} \(X_1X_2\) (el plano ecuatorial del elipsoide), con una pequeña dispersión fuera de él. Los dos primeros componentes (\(\mathbf{v}_1\) y \(\mathbf{v}_2\)) definen el plano que contiene casi toda la variabilidad. La varianza en la dirección \(X_3\) es despreciable (\(\lambda_3 = 0.1\)), solo el \(0.55\%\) de la varianza total. \textbf{Reducción de dimensionalidad:} Podemos proyectar todos los puntos sobre el plano \(X_1X_2\) (usando solo \(\xi_1\) y \(\xi_2\)) y perder solo el 0.55\% de la información.
+\end{example}
+
+\begin{example}[Datos en 3D con Estructura de "Cigarro"]
+\label{ej:cigarro}
+Consideremos \(\X = (X_1, X_2, X_3)^\top\) con matriz de covarianzas:
+\[
+\bfSigma_{\X\X} = \begin{pmatrix} 5 & 4.9 & 4.8 \\ 4.9 & 5 & 4.9 \\ 4.8 & 4.9 & 5 \end{pmatrix}
+\]
+(altas correlaciones entre todas las variables).
+
+\textbf{Eigenvalores:} \(\lambda_1 \approx 14.7\), \(\lambda_2 \approx 0.2\), \(\lambda_3 \approx 0.1\). \textbf{Eigenvectores:}
+\begin{itemize}
+    \item \(\mathbf{v}_1 \approx (0.58, 0.58, 0.58)^\top\) (dirección \(X_1 = X_2 = X_3\));
+    \item \(\mathbf{v}_2\) y \(\mathbf{v}_3\) son ortogonales a \(\mathbf{v}_1\).
+\end{itemize}
+
+\textbf{Interpretación geométrica:} La nube de puntos tiene forma de \textbf{cigarro} o \textbf{salchicha} muy alargada. El eje principal (primer componente) está en la dirección del vector \((1,1,1)/\sqrt{3}\), representando el "tamaño global" o "factor común". Las direcciones perpendiculares a este eje tienen muy poca varianza (\(\lambda_2 + \lambda_3 \approx 0.3\), solo el 2\% de la varianza total). La dimensionalidad efectiva es 1: casi toda la información se resume en \(\xi_1 = \frac{1}{\sqrt{3}}(X_1 + X_2 + X_3)\).
+\end{example}
+
+\section{Ejemplos Prácticos que usan PCA}
+
+A continuación se presentan ejemplos de la aplicación del PCA en diversos campos, junto con enlaces a recursos donde se puede consultar el código y la implementación correspondiente.
+
+\subsection{Primeros Cinco Ejemplos Prácticos}
+
+\begin{example}[Reducción de Dimensionalidad para Clasificación de Dígitos Manuscritos (MNIST)]
+\label{ej:mnist}
+\textbf{Problema matemático:} Clasificar imágenes de \(28 \times 28\) píxeles. Cada imagen es un vector en \(\mathbb{R}^{784}\).
+
+\textbf{Aplicación de PCA:} Se construye la matriz de datos \(\mathbf{X}\) de tamaño \(n \times 784\). Se calcula la matriz de covarianzas muestral \(\hat{\bfSigma}\) y su descomposición espectral.
+
+\textbf{Implementación:} 
+\begin{itemize}
+    \item \href{https://scikit-learn.org/stable/auto_examples/decomposition/plot_pca_iris.html}{Ejemplo con scikit-learn (Iris dataset)} 
+    \item \href{https://github.com/mazieres/analysis/blob/master/mnist_pca.py}{Implementación en Python con MNIST}
+    \item \href{https://medium.com/data-science/principal-component-analysis-made-easy-a-step-by-step-tutorial-184f295e97fe}{Tutorial paso a paso con código desde cero} 
+\end{itemize}
+\end{example}
+
+\begin{example}[Detección de Anomalías en Redes (Ciberseguridad)]
+\label{ej:anomalias}
+\textbf{Problema matemático:} Monitorear el tráfico de red para detectar comportamientos anómalos.
+
+\textbf{Aplicación de PCA:} Se entrena un modelo PCA con tráfico "normal" y se calcula el error de reconstrucción para nuevas conexiones.
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html}{Documentación de scikit-learn para PCA}
+    \item \href{https://github.com/elena-sharova/AnomalyDetectionPCA}{Repositorio con detección de anomalías usando PCA}
+\end{itemize}
+\end{example}
+
+\begin{example}[Análisis de Componentes Principales Funcionales (FPCA) para Curvas de Crecimiento]
+\label{ej:fpca}
+\textbf{Problema matemático:} Analizar curvas de crecimiento (datos funcionales).
+
+\textbf{Aplicación de PCA:} Se discretiza el dominio funcional y se aplica PCA estándar.
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://pypi.org/project/scikit-fda/}{Librería scikit-fda para análisis de datos funcionales}
+    \item \href{https://github.com/GAA-UAM/scikit-fda}{Repositorio de scikit-fda en GitHub}
+\end{itemize}
+\end{example}
+
+\begin{example}[Compresión de Video (Análisis de Imágenes Hiperespectrales)]
+\label{ej:video}
+\textbf{Problema matemático:} Comprimir imágenes hiperespectrales con cientos de bandas.
+
+\textbf{Aplicación de PCA:} Se reestructura el cubo de datos en una matriz 2D (píxeles × bandas).
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://github.com/GeospatialPython/pyspatial/blob/master/hyperspectral/notebooks/4_spectral_dimensionality_reduction.ipynb}{Notebook para reducción de dimensionalidad hiperespectral}
+    \item \href{https://www.mathworks.com/help/images/dimensionality-reduction-using-pca-for-hyperspectral-images.html}{Ejemplo en MATLAB}
+\end{itemize}
+\end{example}
+
+\begin{example}[Procesamiento de Señales (Separación de Fuentes)]
+\label{ej:senales}
+\textbf{Problema matemático:} Preprocesamiento para separación de fuentes (problema "cocktail party").
+
+\textbf{Aplicación de PCA:} Blanqueamiento de los datos (descorrelación) como paso previo a ICA.
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.FastICA.html}{Implementación de ICA en scikit-learn}
+    \item \href{https://github.com/explosion/spaCy/blob/master/spacy/pipeline/trainable_pipe.pyx}{Ejemplo de preprocesamiento con PCA}
+\end{itemize}
+\end{example}
+
+\subsection{Siguientes Cinco Ejemplos Prácticos}
+
+\begin{example}[Sistemas de Recomendación (Filtrado Colaborativo)]
+\label{ej:recomendacion}
+\textbf{Problema matemático:} Matriz de calificaciones usuarios-películas dispersa.
+
+\textbf{Aplicación de PCA:} Factorización matricial para encontrar factores latentes.
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://surpriselib.com/}{Librería Surprise para sistemas de recomendación}
+    \item \href{https://github.com/NicolasHug/Surprise}{Repositorio de Surprise en GitHub}
+    \item \href{https://towardsdatascience.com/building-a-collaborative-filtering-recommender-system-with-pca-2723b3b2d68f}{Tutorial: PCA para filtrado colaborativo}
+\end{itemize}
+\end{example}
+
+\begin{example}[Bioinformática: Análisis de Expresión Génica (RNA-seq)]
+\label{ej:bioinfo}
+\textbf{Problema matemático:} Matriz de expresión de miles de genes para pocos pacientes (\(p \gg n\)).
+
+\textbf{Aplicación de PCA:} Visualización de pacientes en espacio reducido para identificar subtipos.
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://bioconductor.org/packages/release/bioc/html/pcaMethods.html}{Paquete pcaMethods de Bioconductor}
+    \item \href{https://github.com/broadinstitute/PCA-for-RNA-seq}{Repositorio con ejemplos de PCA para RNA-seq}
+    \item \href{https://www.nature.com/articles/nprot.2015.124}{Artículo de Nature Protocols con código R}
+\end{itemize}
+\end{example}
+
+\begin{example}[Meteoestadística: Análisis de Patrones de Temperatura (EOFs)]
+\label{ej:meteo}
+\textbf{Problema matemático:} Identificar patrones espaciales de variación climática.
+
+\textbf{Aplicación de PCA:} PCA aplicado a datos espacio-temporales (EOF Analysis).
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://github.com/ajdawson/eofs}{Librería eofs en Python}
+    \item \href{https://climatedataguide.ucar.edu/climate-data-tools-and-analysis/empirical-orthogonal-function-eof-analysis-and-rotated-eof-analysis}{Guía de EOF en NCAR}
+    \item \href{https://www.esrl.noaa.gov/psd/data/climateindices/list/}{Índices climáticos calculados con EOF}
+\end{itemize}
+\end{example}
+
+\begin{example}[Finanzas Cuantitativas: Modelos de Factores]
+\label{ej:finanzas}
+\textbf{Problema matemático:} Matriz de covarianzas ruidosa para optimización de portafolios.
+
+\textbf{Aplicación de PCA:} Descomposición de la matriz de covarianzas en factores.
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://github.com/ranaroussi/quantstats}{Librería QuantStats para análisis financiero}
+    \item \href{https://github.com/microsoft/qlib}{Qlib: IA para finanzas cuantitativas}
+    \item \href{https://towardsdatascience.com/principal-component-analysis-for-portfolio-optimization-1bbf64f7a33f}{Tutorial: PCA para optimización de portafolios}
+\end{itemize}
+\end{example}
+
+\begin{example}[Robótica: Procesamiento de Nubes de Puntos (SLAM)]
+\label{ej:robotica}
+\textbf{Problema matemático:} Extraer características geométricas de nubes de puntos 3D.
+
+\textbf{Aplicación de PCA:} PCA local en vecindades de puntos para clasificar geometría.
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://github.com/PointCloudLibrary/pcl}{Point Cloud Library (PCL)}
+    \item \href{https://github.com/isl-org/Open3D}{Open3D para procesamiento 3D}
+    \item \href{http://www.open3d.org/docs/release/tutorial/geometry/pointcloud.html}{Ejemplo de análisis de normales con PCA en Open3D}
+\end{itemize}
+\end{example}
+
+
+\begin{example}[Visualización de Datos de Alta Dimensión (t-SNE / UMAP)]
+\label{ej:visualizacion}
+\textbf{Problema matemático:} Visualizar datos de alta dimensión en 2D.
+
+\textbf{Aplicación de PCA:} Preprocesamiento para algoritmos de visualización (t-SNE, UMAP).
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html}{t-SNE en scikit-learn}
+    \item \href{https://github.com/lmcinnes/umap}{UMAP: Uniform Manifold Approximation and Projection}
+    \item \href{https://pair-code.github.io/understanding-umap/}{Understanding UMAP (interactivo)}
+\end{itemize}
+\end{example}
+
+\begin{example}[Reconocimiento de Voz (MFCC + PCA)]
+\label{ej:voz}
+\textbf{Problema matemático:} Procesar coeficientes MFCC para reconocimiento de voz.
+
+\textbf{Aplicación de PCA:} Reducción de dimensionalidad de vectores MFCC.
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://github.com/jameslyons/python_speech_features}{python\_speech\_features}
+    \item \href{https://github.com/mozilla/DeepSpeech}{Mozilla DeepSpeech}
+    \item \href{https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html}{Tutorial de procesamiento de voz con MFCC y PCA}
+\end{itemize}
+\end{example}
+
+\begin{example}[Análisis de Textura en Imágenes (Filtros de Gabor + PCA)]
+\label{ej:textura}
+\textbf{Problema matemático:} Clasificar texturas en imágenes.
+
+\textbf{Aplicación de PCA:} Reducción de dimensionalidad de características de textura.
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://scikit-image.org/docs/stable/auto_examples/features_detection/plot_gabor.html}{Filtros Gabor en scikit-image}
+    \item \href{https://github.com/scikit-image/scikit-image}{Repositorio de scikit-image}
+    \item \href{https://www.kaggle.com/code/kmader/pca-for-texture-analysis}{Notebook de Kaggle: PCA para análisis de textura}
+\end{itemize}
+\end{example}
+
+\begin{example}[Genética de Poblaciones (PCA como herramienta de corrección)]
+\label{ej:genetica}
+\textbf{Problema matemático:} Controlar estructura poblacional en estudios de asociación genética.
+
+\textbf{Aplicación de PCA:} Incluir componentes principales como covariables en modelos estadísticos.
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://github.com/chrchang/eigensoft}{EIGENSOFT para análisis de estratificación poblacional}
+    \item \href{https://www.cog-genomics.org/plink/}{PLINK para análisis genéticos}
+    \item \href{https://github.com/Shicheng-Guo/PCA}{Repositorio con ejemplos de PCA en genética}
+\end{itemize}
+\end{example}
+
+\begin{example}[Análisis de Componentes Principales Robustos (Robust PCA) para Video Vigilancia]
+\label{ej:rpca}
+\textbf{Problema matemático:} Separar fondo estático de objetos en movimiento en video.
+
+\textbf{Aplicación de PCA Robusta:} Descomposición en matriz de bajo rango (fondo) y matriz dispersa (movimiento).
+
+\textbf{Implementación:}
+\begin{itemize}
+    \item \href{https://github.com/dganguli/robust-pca}{Implementación de Robust PCA}
+    \item \href{https://github.com/andrewssobral/lrslibrary}{Low-Rank and Sparse Tools Library}
+    \item \href{https://scikit-learn.org/stable/auto_examples/applications/plot_topics_extraction_with_nmf_lda.html}{Comparación con NMF en scikit-learn}
+\end{itemize}
+\end{example}
+
+\section{Resumen de Interpretaciones Geométricas}
+
+\begin{center}
+\begin{tabular}{|m{3.5cm}|m{3cm}|m{3cm}|m{3cm}|}
+\hline
+\textbf{Tipo de Matriz} & \textbf{Forma en \(\mathbb{R}^2\)} & \textbf{Forma en \(\mathbb{R}^3\)} & \textbf{Interpretación PCA} \\
+\hline
+Esférica (\(\sigma^2 I\)) & Círculo & Esfera & No hay direcciones privilegiadas. PCA no reduce dimensionalidad. \\
+\hline
+Alta correlación positiva & Elipse alargada & Elipsoide alargado (cigarro) & Una dirección dominante. Dimensionalidad efectiva 1. \\
+\hline
+Correlación negativa perfecta & Línea recta & Plano (en casos extremos) & Los puntos yacen en subespacio de menor dimensión. \\
+\hline
+Estructura planar & - & Elipsoide achatado (disco) & Los puntos yacen cerca de un plano. Dimensionalidad efectiva 2. \\
+\hline
+Independencia con varianzas diferentes & Elipse con ejes alineados a los ejes coordenados & Elipsoide con ejes alineados & Los componentes son las variables originales. \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{remark}
+\textbf{Conclusión geométrica:} PCA encuentra los \textbf{ejes principales de la elipsoide} que mejor se ajusta a la nube de datos, ordenados por la longitud de sus semiejes (las raíces cuadradas de los eigenvalores).
+\end{remark}
+
+\appendix
+\section*{Apéndice: Fundamentos Matemáticos de PCA en el Contexto de la Inteligencia Artificial}
+\addcontentsline{toc}{section}{Apéndice: Fundamentos Matemáticos de PCA en el Contexto de la Inteligencia Artificial}
+\setcounter{section}{0} % Reinicia contador para el apéndice
+\renewcommand{\thesection}{A.\arabic{section}} % Formato A.1, A.2, etc.
+\setcounter{equation}{0} % Reinicia ecuaciones
+
+\section{Introducción: Del PCA Clásico al Aprendizaje Automático}
+
+El Análisis de Componentes Principales, introducido por Pearson (1901) y Hotelling (1933), es un pilar fundamental en estadística y aprendizaje automático. En el contexto de la inteligencia artificial, el PCA no es meramente una herramienta de preprocesamiento, sino un paradigma matemático que ha dado lugar a generalizaciones profundas: PCA kernel (KPCA), PCA probabilístico (PPCA), PCA disperso (Sparse PCA) y PCA robusto (Robust PCA). Estas extensiones responden a las necesidades del aprendizaje automático moderno: datos no lineales, alta dimensionalidad, interpretabilidad y robustez ante outliers.
+
+Desde una perspectiva matemática, el PCA puede ser entendido como un problema de optimización en espacios de Hilbert, una formulación que permite su extensión natural a kernels y a teoría de aprendizaje estadístico.
+
+\section{PCA en Espacios de Hilbert con Kernel (KPCA)}
+
+\subsection{Formulación Matemática}
+
+Sea $\mathcal{Z} \subseteq \mathbb{R}^d$ el espacio de datos. Consideremos una función kernel $\kappa: \mathcal{Z} \times \mathcal{Z} \to \mathbb{R}$ continua, simétrica y definida positiva. Por el teorema de Moore-Aronszajn, existe un único espacio de Hilbert con kernel reproductor (RKHS) $\mathcal{H}_\kappa$ y una función de embedding $\phi: \mathcal{Z} \to \mathcal{H}_\kappa$ tal que:
+
+\[
+\kappa(z, z') = \langle \phi(z), \phi(z') \rangle_{\mathcal{H}_\kappa}.
+\]
+
+\begin{definition}[Operador de Covarianza en el RKHS]
+Dada una distribución de probabilidad $\mu$ sobre $\mathcal{Z}$, el operador de covarianza poblacional $C: \mathcal{H}_\kappa \to \mathcal{H}_\kappa$ se define como:
+\[
+C = \mathbb{E}_{z \sim \mu}[\phi(z) \otimes \phi(z)],
+\]
+donde $\otimes$ denota el producto tensorial: $(\phi(z) \otimes \phi(z))(f) = \langle \phi(z), f \rangle_{\mathcal{H}_\kappa} \phi(z)$ para todo $f \in \mathcal{H}_\kappa$.
+\end{definition}
+
+Dado un conjunto de entrenamiento $S = (z_1, \ldots, z_m) \in \mathcal{Z}^m$, el operador de covarianza empírico es:
+\[
+\hat{C} = \frac{1}{m} \sum_{i=1}^m \phi(z_i) \otimes \phi(z_i).
+\]
+
+\subsection{Ecuación de Eigenvalores en el RKHS}
+
+Resolver KPCA equivale a encontrar eigenvectores $v \in \mathcal{H}_\kappa$ tales que $\hat{C} v = \lambda v$.
+
+\begin{lemma}[Teorema del Representante para KPCA]
+\label{lemma:representante}
+Todo eigenvector $v \in \mathcal{H}_\kappa$ de $\hat{C}$ correspondiente a un eigenvalor $\lambda > 0$ pertenece al subespacio generado por $\{\phi(z_1), \ldots, \phi(z_m)\}$. Es decir, existen coeficientes $\alpha_1, \ldots, \alpha_m \in \mathbb{R}$ tales que:
+\[
+v = \sum_{i=1}^m \alpha_i \phi(z_i).
+\]
+\end{lemma}
+
+\begin{proof}
+Sea $v \in \mathcal{H}_\kappa$ tal que $\hat{C} v = \lambda v$. Podemos descomponer $v$ en su proyección sobre $\operatorname{span}\{\phi(z_i)\}$ y su componente ortogonal:
+\[
+v = \sum_{i=1}^m \alpha_i \phi(z_i) + v_\perp,
+\]
+con $v_\perp \perp \operatorname{span}\{\phi(z_i)\}$. Aplicando $\hat{C}$ a esta expresión:
+\[
+\hat{C} v = \frac{1}{m} \sum_{i=1}^m \langle \phi(z_i), v \rangle_{\mathcal{H}_\kappa} \phi(z_i) = \frac{1}{m} \sum_{i=1}^m \left\langle \phi(z_i), \sum_{j=1}^m \alpha_j \phi(z_j) + v_\perp \right\rangle \phi(z_i).
+\]
+Por ortogonalidad, $\langle \phi(z_i), v_\perp \rangle = 0$, luego:
+\[
+\hat{C} v = \frac{1}{m} \sum_{i=1}^m \sum_{j=1}^m \alpha_j \kappa(z_i, z_j) \phi(z_i) \in \operatorname{span}\{\phi(z_i)\}.
+\]
+Por lo tanto, $\hat{C} v \in \operatorname{span}\{\phi(z_i)\}$. Como $\hat{C} v = \lambda v$, tenemos $\lambda v \in \operatorname{span}\{\phi(z_i)\}$. Si $\lambda > 0$, entonces $v \in \operatorname{span}\{\phi(z_i)\}$, lo que implica $v_\perp = 0$.
+\end{proof}
+
+Sustituyendo $v = \sum_{i=1}^m \alpha_i \phi(z_i)$ en la ecuación $\hat{C} v = \lambda v$:
+
+\[
+\frac{1}{m} \sum_{i=1}^m \phi(z_i) \sum_{j=1}^m \alpha_j \kappa(z_i, z_j) = \lambda \sum_{i=1}^m \alpha_i \phi(z_i).
+\]
+
+Tomando producto interior con $\phi(z_k)$ para cada $k$:
+
+\[
+\frac{1}{m} \sum_{i=1}^m \kappa(z_k, z_i) \sum_{j=1}^m \alpha_j \kappa(z_i, z_j) = \lambda \sum_{i=1}^m \alpha_i \kappa(z_k, z_i).
+\]
+
+En notación matricial, con $K \in \mathbb{R}^{m \times m}$ la matriz de Gram ($K_{ij} = \kappa(z_i, z_j)$) y $\alpha = (\alpha_1, \ldots, \alpha_m)^\top$, obtenemos:
+
+\[
+\frac{1}{m} K^2 \alpha = \lambda K \alpha.
+\]
+
+Si $K$ es invertible (lo cual asumimos para simplificar), multiplicando por $K^{-1}$:
+
+\[
+\frac{1}{m} K \alpha = \lambda \alpha.
+\]
+
+\begin{theorem}[Problema de Eigenvalores Dual para KPCA]
+\label{thm:kpca_dual}
+Los eigenvalores $\lambda > 0$ del operador $\hat{C}$ y los vectores de coeficientes $\alpha$ correspondientes satisfacen:
+\[
+K \alpha = m \lambda \alpha.
+\]
+Es decir, $\alpha$ es un eigenvector de la matriz de Gram $K$ con eigenvalor $m\lambda$.
+\end{theorem}
+
+\subsection{Cotas de Generalización vía PAC-Bayes}
+
+Un avance teórico reciente fundamental es la aplicación de la teoría PAC-Bayes para obtener cotas de generalización para KPCA.
+
+\begin{definition}[Error de Reconstrucción]
+Sea $\hat{V}_k$ el subespacio generado por los primeros $k$ eigenvectores empíricos de $\hat{C}$. Para un nuevo punto $z$, definimos el error de reconstrucción:
+\[
+\ell(\hat{V}_k, z) = \| \phi(z) - P_{\hat{V}_k} \phi(z) \|^2_{\mathcal{H}_\kappa},
+\]
+donde $P_{\hat{V}_k}$ es el proyector ortogonal sobre $\hat{V}_k$.
+\end{definition}
+
+El riesgo poblacional es $R(\hat{V}_k) = \mathbb{E}_{z \sim \mu}[\ell(\hat{V}_k, z)]$ y el riesgo empírico es $\hat{R}_S(\hat{V}_k) = \frac{1}{m} \sum_{i=1}^m \ell(\hat{V}_k, z_i)$.
+
+\begin{theorem}[Cota PAC-Bayes para KPCA]
+\label{thm:pacbayes_kpca}
+Sea $\kappa$ un kernel acotado con $\sup_{z \in \mathcal{Z}} \kappa(z, z) \leq B$. Sea $\mathcal{Q}$ una familia de distribuciones sobre subespacios de dimensión $k$ en $\mathcal{H}_\kappa$ y sea $P$ una distribución prior sobre estos subespacios. Entonces, para cualquier $\delta \in (0,1)$, con probabilidad al menos $1-\delta$ sobre la muestra $S \sim \mu^m$, para toda distribución posterior $Q \in \mathcal{Q}$, se tiene:
+
+\[
+\mathbb{E}_{V \sim Q}[R(V)] \leq \mathbb{E}_{V \sim Q}[\hat{R}_S(V)] + \sqrt{\frac{\KL(Q\|P) + \log(2m/\delta)}{2m-1}} \cdot \tau,
+\]
+
+donde $\tau = 4B$ es una constante que depende de la cota del kernel.
+\end{theorem}
+
+\begin{proof}
+La demostración sigue los pasos estándar de PAC-Bayes adaptados al caso de KPCA, con las siguientes etapas clave:
+
+\begin{enumerate}
+    \item \textbf{Acotación de la pérdida:} Dado que $\kappa(z, z) \leq B$, para cualquier subespacio $V$ y cualquier $z$, tenemos:
+    \[
+    \ell(V, z) = \|\phi(z) - P_V \phi(z)\|^2 \leq \|\phi(z)\|^2 = \kappa(z, z) \leq B.
+    \]
+    Por lo tanto, la pérdida está acotada en $[0, B]$.
+    
+    \item \textbf{Transformación de Laplace:} Para cualquier $\lambda > 0$, por la desigualdad de Markov y la independencia de las muestras:
+    \[
+    \mathbb{E}_{S \sim \mu^m} \left[ \exp\left( \lambda m (\mathbb{E}_{V \sim Q}[R(V)] - \mathbb{E}_{V \sim Q}[\hat{R}_S(V)]) \right) \right] \leq \mathbb{E}_{V \sim Q} \left[ \mathbb{E}_{S \sim \mu^m} \left[ e^{\lambda \sum_{i=1}^m (R(V) - \ell(V, z_i))} \right] \right].
+    \]
+    
+    \item \textbf{Acotación de la función generatriz de momentos:} Usando la cota de Hoeffding para variables acotadas, para cada $V$ fijo:
+    \[
+    \mathbb{E}_{S \sim \mu^m} \left[ e^{\lambda \sum_{i=1}^m (R(V) - \ell(V, z_i))} \right] \leq e^{m \lambda^2 B^2 / 2}.
+    \]
+    
+    \item \textbf{Integración sobre $V$ y uso del prior:} Aplicando la desigualdad de Donsker-Varadhan y el teorema de cambio de medida:
+    \[
+    \mathbb{E}_{V \sim Q} \left[ e^{\lambda m (R(V) - \hat{R}_S(V))} \right] \leq e^{\KL(Q\|P)} \mathbb{E}_{V \sim P} \left[ e^{\lambda m (R(V) - \hat{R}_S(V))} \right].
+    \]
+    
+    \item \textbf{Optimización de $\lambda$ y desigualdad de Markov:} Finalmente, se optimiza $\lambda$ y se aplica la desigualdad de Markov para obtener la cota deseada.
+\end{enumerate}
+
+La elección óptima de $\lambda$ conduce al término $\sqrt{(\KL(Q\|P) + \log(2m/\delta))/(2m-1)}$, que es la velocidad típica de las cotas PAC-Bayes.
+\end{proof}
+
+Esta cota mejora resultados previos basados en complejidad de Rademacher y permite tasas rápidas de convergencia cuando la dimensión del subespacio proyectado es suficientemente alta.
+
+\section{PCA Probabilístico (PPCA) y Modelos Generativos}
+
+\subsection{Modelo Generativo Lineal con Ruido Isotrópico}
+
+El PCA probabilístico, formulado por Tipping y Bishop (1999), reconceptualiza el PCA como un modelo generativo.
+
+\begin{definition}[Modelo PPCA]
+Sea $x \in \mathbb{R}^d$ la variable observable y $z \in \mathbb{R}^k$ la variable latente ($k < d$). El modelo PPCA se define como:
+\[
+\begin{aligned}
+z &\sim \mathcal{N}(0, I_k), \\
+x | z &\sim \mathcal{N}(W z + \mu, \sigma^2 I_d),
+\end{aligned}
+\]
+donde $W \in \mathbb{R}^{d \times k}$ es la matriz de cargas, $\mu \in \mathbb{R}^d$ es el vector de medias, y $\sigma^2 > 0$ es la varianza del ruido.
+\end{definition}
+
+\begin{proposition}[Distribución Marginal]
+Bajo el modelo PPCA, la distribución marginal de $x$ es Gaussiana:
+\[
+x \sim \mathcal{N}(\mu, C), \quad \text{con } C = WW^\top + \sigma^2 I_d.
+\]
+\end{proposition}
+
+\begin{proof}
+Por las propiedades de la distribución normal, la suma de una transformación lineal de una normal con ruido independiente es normal. La esperanza es:
+\[
+\mathbb{E}[x] = \mathbb{E}[\mathbb{E}[x|z]] = \mathbb{E}[Wz + \mu] = W\mathbb{E}[z] + \mu = \mu.
+\]
+La covarianza se obtiene mediante la ley de varianza total:
+\[
+\begin{aligned}
+\Cov(x) &= \mathbb{E}[\Cov(x|z)] + \Cov(\mathbb{E}[x|z]) \\
+&= \mathbb{E}[\sigma^2 I_d] + \Cov(Wz + \mu) \\
+&= \sigma^2 I_d + W \Cov(z) W^\top = \sigma^2 I_d + W I_k W^\top = WW^\top + \sigma^2 I_d.
+\end{aligned}
+\]
+\end{proof}
+
+\subsection{Verosimilitud y Estimación por EM}
+
+La log-verosimilitud para un conjunto de datos $\{x_1, \ldots, x_n\}$ es:
+
+\[
+\mathcal{L}(W, \mu, \sigma^2) = -\frac{n}{2} \left[ d \log(2\pi) + \log \det(C) + \operatorname{tr}(C^{-1} \hat{\Sigma}) \right],
+\]
+
+donde $\hat{\Sigma} = \frac{1}{n} \sum_{i=1}^n (x_i - \mu)(x_i - \mu)^\top$ es la matriz de covarianzas muestral.
+
+\begin{theorem}[Algoritmo EM para PPCA]
+\label{thm:ppca_em}
+El algoritmo EM para PPCA consiste en iterar los siguientes pasos:
+
+\textbf{Paso E:} Calcular las esperanzas condicionales de las variables latentes:
+\[
+\begin{aligned}
+\mathbb{E}[z_i | x_i] &= (W^\top W + \sigma^2 I_k)^{-1} W^\top (x_i - \mu), \\
+\mathbb{E}[z_i z_i^\top | x_i] &= \sigma^2 (W^\top W + \sigma^2 I_k)^{-1} + \mathbb{E}[z_i | x_i] \mathbb{E}[z_i | x_i]^\top.
+\end{aligned}
+\]
+
+\textbf{Paso M:} Actualizar los parámetros:
+\[
+\begin{aligned}
+W_{\text{nuevo}} &= \left[ \sum_{i=1}^n (x_i - \mu) \mathbb{E}[z_i | x_i]^\top \right] \left[ \sum_{i=1}^n \mathbb{E}[z_i z_i^\top | x_i] \right]^{-1}, \\
+\sigma^2_{\text{nuevo}} &= \frac{1}{nd} \sum_{i=1}^n \left( \|x_i - \mu\|^2 - 2 \mathbb{E}[z_i | x_i]^\top W_{\text{nuevo}}^\top (x_i - \mu) + \operatorname{tr}\left( \mathbb{E}[z_i z_i^\top | x_i] W_{\text{nuevo}}^\top W_{\text{nuevo}} \right) \right).
+\end{aligned}
+\]
+\end{theorem}
+
+\begin{proof}
+La función Q del algoritmo EM es:
+\[
+Q(\theta|\theta_{\text{old}}) = \sum_{i=1}^n \mathbb{E}_{z_i|x_i,\theta_{\text{old}}} [\log p(x_i, z_i | \theta)],
+\]
+donde $\theta = (W, \mu, \sigma^2)$. La log-verosimilitud completa es:
+\[
+\log p(x, z | \theta) = -\frac{d}{2}\log(2\pi\sigma^2) - \frac{1}{2\sigma^2}\|x - \mu - Wz\|^2 - \frac{1}{2}\|z\|^2 + \text{constante}.
+\]
+
+Tomando esperanza condicional y derivando respecto a los parámetros, se obtienen las ecuaciones de actualización. La derivación detallada es la siguiente:
+
+\begin{enumerate}
+    \item \textbf{Actualización de W:} Derivando $Q$ respecto a $W$ e igualando a cero:
+    \[
+    \frac{\partial Q}{\partial W} = -\frac{1}{\sigma^2} \sum_{i=1}^n \mathbb{E}[(x_i - \mu - W z_i) z_i^\top | x_i] = 0.
+    \]
+    Esto implica $\sum_{i=1}^n (x_i - \mu) \mathbb{E}[z_i|x_i]^\top = W \sum_{i=1}^n \mathbb{E}[z_i z_i^\top|x_i]$, de donde se obtiene la fórmula.
+    
+    \item \textbf{Actualización de $\sigma^2$:} Derivando respecto a $\sigma^2$:
+    \[
+    \frac{\partial Q}{\partial \sigma^2} = -\frac{nd}{2\sigma^2} + \frac{1}{2\sigma^4} \sum_{i=1}^n \mathbb{E}[\|x_i - \mu - W z_i\|^2 | x_i] = 0.
+    \]
+    Despejando $\sigma^2$ y desarrollando el término cuadrático se obtiene la fórmula.
+\end{enumerate}
+\end{proof}
+
+\begin{theorem}[Convergencia del PPCA al PCA Clásico]
+\label{thm:ppca_limit}
+En el límite $\sigma^2 \to 0$, el PPCA converge al PCA clásico. Específicamente, la matriz de cargas $W$ tiende a:
+\[
+W \to U_k (\Lambda_k - \sigma^2 I_k)^{1/2},
+\]
+donde $U_k$ contiene los primeros $k$ eigenvectores de la matriz de covarianzas muestral y $\Lambda_k$ es la matriz diagonal con los correspondientes eigenvalores.
+\end{theorem}
+
+\begin{proof}
+Cuando $\sigma^2 \to 0$, la matriz de covarianza del modelo $C = WW^\top + \sigma^2 I_d$ debe aproximar la matriz de covarianza muestral $\hat{\Sigma}$. En el límite, la solución de máxima verosimilitud satisface $WW^\top = \hat{\Sigma} - \sigma^2 I_d$ cuando $\hat{\Sigma}$ tiene rango $k$, y la solución viene dada por la descomposición espectral de $\hat{\Sigma}$ truncada a los primeros $k$ componentes.
+
+Más formalmente, la solución de máxima verosimilitud para $W$ satisface $W = U_k (\Lambda_k - \sigma^2 I_k)^{1/2}$, donde $U_k$ son los eigenvectores de $\hat{\Sigma}$ correspondientes a los eigenvalores $\Lambda_k$. Tomando límite $\sigma^2 \to 0$ obtenemos que las columnas de $W$ son los eigenvectores escalados por la raíz de los eigenvalores, que es precisamente la representación del PCA clásico.
+\end{proof}
+
+\subsection{Selección Automática de Dimensionalidad: ARD}
+
+Una extensión poderosa del PPCA es la incorporación de *Automatic Relevance Determination* (ARD).
+
+\begin{definition}[PPCA con ARD]
+Se introduce un hiperparámetro de precisión $\alpha_j$ para cada columna de $W$:
+\[
+p(W | \alpha) = \prod_{j=1}^k \left( \frac{\alpha_j}{2\pi} \right)^{d/2} \exp\left( -\frac{\alpha_j}{2} \|W_{:,j}\|^2 \right).
+\]
+Los $\alpha_j$ se tratan como variables aleatorias con distribuciones Gamma, o se estiman por verosimilitud marginal.
+\end{definition}
+
+\begin{theorem}[Comportamiento de ARD]
+En el óptimo de la verosimilitud marginal, aquellos $\alpha_j$ que tienden a infinito "apagan" las dimensiones irrelevantes de la variable latente, proporcionando una selección automática de la dimensionalidad efectiva. Es decir, si $\alpha_j \to \infty$, entonces la columna correspondiente $W_{:,j} \to 0$, eliminando efectivamente esa dimensión latente.
+\end{theorem}
+
+\begin{proof}
+La verosimilitud marginal integrando $W$ es:
+\[
+p(X | \alpha, \mu, \sigma^2) = \int p(X | W, \mu, \sigma^2) p(W | \alpha) dW.
+\]
+Para $\alpha_j$ grandes, la prior sobre $W_{:,j}$ se concentra fuertemente en cero. Si esa columna no contribuye significativamente a la verosimilitud, la integral marginal asigna mayor probabilidad a modelos con $\alpha_j$ grande. En el límite $\alpha_j \to \infty$, la distribución posterior de $W_{:,j}$ se concentra en cero, efectivamente eliminando esa dimensión.
+\end{proof}
+
+\section{PCA Disperso (Sparse PCA) y Transiciones de Fase}
+
+\subsection{El Problema de la Dispersidad}
+
+El PCA clásico produce componentes que son combinaciones lineales de *todas* las variables originales, lo que dificulta la interpretabilidad en alta dimensionalidad. El PCA disperso impone una restricción de $\ell_0$ o $\ell_1$ sobre los vectores de carga.
+
+\begin{definition}[PCA Disperso]
+El primer componente disperso se obtiene resolviendo:
+\[
+\max_{v \in \mathbb{R}^d} v^\top \hat{\Sigma} v \quad \text{sujeto a} \quad \|v\|_2 = 1, \quad \|v\|_0 \leq s,
+\]
+donde $\|v\|_0$ es el número de entradas no nulas y $s$ es el nivel de dispersidad deseado.
+\end{definition}
+
+\subsection{Umbralización Suave y Transiciones de Fase}
+
+Investigaciones recientes han establecido que, bajo ciertas condiciones, el umbralizado suave (*soft thresholding*) es casi óptimo para PCA disperso.
+
+\begin{definition}[Operador de Umbralizado Suave]
+Sea $\hat{\Sigma}$ la matriz de covarianzas muestral. Definimos el operador de umbralizado suave como:
+\[
+[\mathcal{T}_\lambda(\hat{\Sigma})]_{ij} = \operatorname{sign}(\hat{\Sigma}_{ij}) \max(|\hat{\Sigma}_{ij}| - \lambda, 0).
+\]
+\end{definition}
+
+\begin{theorem}[Transición de Fase para PCA Disperso]
+\label{thm:phase_transition}
+Considérese un modelo spiked con covarianza poblacional $\Sigma = I_d + \theta u u^\top$, donde $u \in \mathbb{R}^d$ es un vector unitario con soporte de tamaño $s \ll d$. Sea $\hat{\Sigma}$ la matriz de covarianzas muestral basada en $n$ observaciones independientes. Existe una transición de fase en el plano $(n, d, s, \theta)$ tal que:
+
+\begin{itemize}
+    \item Por encima de un umbral crítico $\lambda_c = \lambda_c(d/n, s, \theta)$, el eigenvector empírico umbralizado $\hat{u} = \mathcal{T}_\lambda(\hat{\Sigma}) u$ está correlacionado con el verdadero vector señal $u$, es decir, $|\langle \hat{u}, u \rangle|^2 > 0$ asintóticamente.
+    \item Por debajo del umbral, $|\langle \hat{u}, u \rangle|^2 \to 0$ cuando $d, n \to \infty$.
+\end{itemize}
+
+El umbral crítico está dado por la solución de la ecuación:
+\[
+\lambda_c = \sqrt{\frac{d}{n}} \left(1 + \sqrt{\frac{s}{d}}\right) + o\left(\sqrt{\frac{d}{n}}\right),
+\]
+para el caso de dispersidad moderada.
+\end{theorem}
+
+\begin{proof}[Esbozo de demostración]
+La demostración utiliza herramientas de teoría de matrices aleatorias y el método del punto de silla. Los pasos clave son:
+
+\begin{enumerate}
+    \item \textbf{Modelo de señal ruidosa:} $\hat{\Sigma} = \Sigma + E$, donde $E$ es una matriz de ruido con propiedades conocidas (matriz de Wishart centrada).
+    
+    \item \textbf{Análisis de umbralizado:} Para cada entrada $(i,j)$, $\hat{\Sigma}_{ij}$ es una variable aleatoria con media $\Sigma_{ij}$ y varianza $\approx 1/n$ (en escala apropiada).
+    
+    \item \textbf{Umbral crítico:} El umbral $\lambda$ debe ser lo suficientemente grande para eliminar el ruido, pero no tanto como para eliminar la señal. El equilibrio se alcanza cuando $\lambda$ es del orden de $\sqrt{d/n}$.
+    
+    \item \textbf{Punto de transición:} La correlación $|\langle \hat{u}, u \rangle|^2$ puede expresarse como un funcional de la distribución de las entradas de $\hat{\Sigma}$. Usando la teoría de valores extremos, se demuestra que existe una discontinuidad en el límite cuando $\theta$ cruza un umbral que depende de $d/n$ y $s$.
+\end{enumerate}
+
+Para un tratamiento riguroso, se requiere el análisis de la ecuación de punto fijo que caracteriza la correlación asintótica, que surge de aplicar el método de réplicas o la ecuación de estado de la matriz de covarianza umbralizada.
+\end{proof}
+
+Este resultado tiene implicaciones profundas para el diseño de algoritmos de IA: establece los límites fundamentales de detectabilidad en problemas de alta dimensionalidad con estructura dispersa.
+
+\section{PCA Robusto y Descomposición en Bajo Rango más Disperso}
+
+\subsection{Formulación Matemática}
+
+El Robust PCA (RPCA) aborda el caso donde los datos contienen outliers o corrupción a gran escala.
+
+\begin{definition}[Problema de Robust PCA]
+Dada una matriz de datos $X \in \mathbb{R}^{d \times n}$, se busca descomponer:
+\[
+X = L + S,
+\]
+donde $L$ es de **bajo rango** (estructura principal) y $S$ es **dispersa** (outliers).
+\end{definition}
+
+La formulación convexa típica es:
+\[
+\min_{L, S} \|L\|_* + \lambda \|S\|_1 \quad \text{sujeto a} \quad L + S = X,
+\]
+donde $\|\cdot\|_*$ es la norma nuclear (suma de valores singulares) y $\|\cdot\|_1$ es la norma $\ell_1$ entrada a entrada.
+
+\begin{theorem}[Recuperación Exacta para RPCA]
+\label{thm:rpca_recovery}
+Bajo condiciones apropiadas de incoherencia (los vectores singulares de $L$ no están demasiado alineados con los ejes coordenados) y soporte aleatorio para $S$, la solución del problema convexo recupera exactamente $L$ y $S$ con alta probabilidad.
+\end{theorem}
+
+\begin{proof}[Esbozo de demostración]
+La demostración se basa en la construcción de un testigo (certificate) de dualidad. Se muestra que existe un multiplicador de Lagrange $Y$ en el espacio dual tal que:
+\begin{enumerate}
+    \item $Y$ está en el subdiferencial de $\|L\|_*$ en $L_0$.
+    \item $Y$ está en el subdiferencial de $\lambda\|S\|_1$ en $S_0$.
+    \item $\|Y\| < 1$ en la norma espectral y $\|Y\|_\infty < \lambda$.
+\end{enumerate}
+La existencia de tal $Y$ garantiza que $(L_0, S_0)$ es la única solución óptima. Las condiciones de incoherencia aseguran que se puede construir tal $Y$.
+\end{proof}
+
+\subsection{Algoritmo de Umbralizado Singular (SVT)}
+
+\begin{definition}[Operador de Umbralizado Singular]
+Para una matriz $A$ con descomposición en valores singulares $A = U \Sigma V^\top$, definimos:
+\[
+\mathcal{S}_\tau(A) = U \cdot \mathcal{T}_\tau(\Sigma) \cdot V^\top,
+\]
+donde $\mathcal{T}_\tau$ aplica umbralizado suave a los valores singulares: $[\mathcal{T}_\tau(\Sigma)]_{ii} = \max(\Sigma_{ii} - \tau, 0)$.
+\end{definition}
+
+\begin{theorem}[Algoritmo SVT para RPCA]
+\label{thm:svt}
+El problema de RPCA puede resolverse mediante el siguiente esquema iterativo:
+\[
+\begin{aligned}
+L_{k+1} &= \mathcal{S}_{\mu}(X - S_k), \\
+S_{k+1} &= \mathcal{T}_{\lambda\mu}(X - L_{k+1}), \\
+\end{aligned}
+\]
+donde $\mu > 0$ es un parámetro y $\mathcal{T}_{\lambda\mu}$ aplica umbralizado suave entrada a entrada.
+\end{theorem}
+
+\begin{proof}
+Este algoritmo corresponde al método de multiplicadores alternantes (ADMM) aplicado al problema de RPCA. La función aumentada lagrangiana es:
+\[
+\mathcal{L}_\mu(L, S, Y) = \|L\|_* + \lambda\|S\|_1 + \langle Y, X - L - S \rangle + \frac{\mu}{2}\|X - L - S\|_F^2.
+\]
+Los pasos de actualización se obtienen minimizando alternativamente sobre $L$ y $S$:
+
+\begin{itemize}
+    \item Para $S$ fijo, la minimización sobre $L$ es equivalente a:
+    \[
+    L_{k+1} = \arg\min_L \|L\|_* + \frac{\mu}{2}\|L - (X - S_k + \frac{Y_k}{\mu})\|_F^2,
+    \]
+    cuya solución es $\mathcal{S}_{1/\mu}(X - S_k + Y_k/\mu)$. Con una elección apropiada de $Y_k$, esto se simplifica a $\mathcal{S}_\mu(X - S_k)$.
+    
+    \item Análogamente, para $L$ fijo, la minimización sobre $S$ da $\mathcal{T}_{\lambda/\mu}(X - L_{k+1} + Y_k/\mu)$, que con la actualización de $Y$ apropiada se reduce a $\mathcal{T}_{\lambda\mu}(X - L_{k+1})$.
+\end{itemize}
+\end{proof}
+
+Este método tiene aplicaciones fundamentales en visión por computadora (separación fondo-movimiento), sistemas de recomendación robustos y preprocesamiento de datos para deep learning.
+
+\section{Aplicaciones en IA y Aprendizaje Profundo}
+
+\subsection{Visualización de Embeddings}
+
+En aprendizaje profundo, los modelos como YOLO o BERT generan embeddings de alta dimensión (512, 1024 o más). PCA se utiliza para proyectar estos embeddings a 2D o 3D, permitiendo a los ingenieros inspeccionar visualmente la calidad de la representación aprendida.
+
+\begin{definition}[Embedding]
+Un embedding es una función $f: \mathcal{X} \to \mathbb{R}^d$ que mapea datos de entrada (imágenes, texto, etc.) a vectores en un espacio de características de alta dimensión.
+\end{definition}
+
+\begin{proposition}[Propiedades de los Embeddings PCA-proyectados]
+Sea $\{f(x_i)\}_{i=1}^n \subset \mathbb{R}^d$ un conjunto de embeddings. La proyección PCA a $k$ dimensiones preserva la estructura de vecindad en el sentido de que:
+\[
+\|P_k(f(x_i) - f(x_j))\|^2 = \|f(x_i) - f(x_j)\|^2 - \|P_{d-k}(f(x_i) - f(x_j))\|^2,
+\]
+donde $P_k$ es la proyección sobre los primeros $k$ componentes principales y $P_{d-k}$ sobre los últimos $d-k$.
+\end{proposition}
+
+\subsection{Preprocesamiento para Detección de Anomalías}
+
+Dado un conjunto de datos normales, se calcula su descomposición PCA. Para una nueva observación $x$, el error de reconstrucción sirve como estadístico de anomalía.
+
+\begin{definition}[Estadístico Q para Detección de Anomalías]
+Para un punto $x$ con media muestral $\bar{x}$ y matriz de proyección $P_k$ sobre los primeros $k$ componentes, el estadístico Q (o SPE - Squared Prediction Error) se define como:
+\[
+Q(x) = \| x - \bar{x} - P_k(x - \bar{x}) \|^2.
+\]
+\end{definition}
+
+\begin{theorem}[Distribución Asintótica del Estadístico Q]
+Bajo la hipótesis nula de que $x$ proviene de la misma distribución normal multivariante que los datos de entrenamiento, la distribución de $Q(x)$ puede aproximarse por:
+\[
+Q(x) \sim \sum_{j=k+1}^d \lambda_j \chi^2_{1,j},
+\]
+donde $\lambda_j$ son los eigenvalores de la matriz de covarianzas poblacional y $\chi^2_{1,j}$ son variables chi-cuadrado independientes con un grado de libertad. En la práctica, se usa la aproximación de Jackson-Mudholkar:
+\[
+\frac{Q(x)}{\theta_1} \sim \chi^2_{\nu},
+\]
+con $\nu = \theta_1^2 / \theta_2$, $\theta_1 = \sum_{j=k+1}^d \lambda_j$, $\theta_2 = \sum_{j=k+1}^d \lambda_j^2$.
+\end{theorem}
+
+\begin{proof}
+La demostración se basa en la descomposición espectral de la matriz de covarianzas y las propiedades de las formas cuadráticas en normales. Para $x \sim \mathcal{N}(\mu, \Sigma)$, el vector $(x - \mu)$ puede expresarse como $\sum_{j=1}^d \sqrt{\lambda_j} \xi_j v_j$, donde $\xi_j \sim \mathcal{N}(0,1)$ independientes. Entonces:
+\[
+Q(x) = \| \sum_{j=k+1}^d \sqrt{\lambda_j} \xi_j v_j \|^2 = \sum_{j=k+1}^d \lambda_j \xi_j^2,
+\]
+que es una combinación lineal de chi-cuadrados. La aproximación de Jackson-Mudholkar iguala los dos primeros momentos de esta combinación a los de una chi-cuadrado escalada.
+\end{proof}
+
+\subsection{Aceleración de Algoritmos de Visualización No Lineal}
+
+Algoritmos como t-SNE y UMAP tienen complejidad computacional $O(n^2)$. Aplicar PCA como paso de preprocesamiento reduce la dimensionalidad de, por ejemplo, 784 a 50 dimensiones, acelerando drásticamente estos algoritmos y eliminando ruido.
+
+\begin{theorem}[Complejidad de t-SNE con Preprocesamiento PCA]
+Sea $X \in \mathbb{R}^{n \times d}$ la matriz de datos original. Aplicar PCA para reducir la dimensionalidad a $k \ll d$ tiene costo $O(\min(nd^2, n^2 d))$ (dependiendo del algoritmo). Luego, ejecutar t-SNE sobre los datos reducidos tiene complejidad $O(n^2 k)$ por iteración. El costo total es significativamente menor que ejecutar t-SNE sobre los datos originales si $d$ es grande.
+\end{theorem}
+
+\subsection{Conexión con Autoencoders}
+
+Los autoencoders lineales con función de activación identidad y error cuadrático medio aprenden exactamente el mismo subespacio que PCA.
+
+\begin{theorem}[Autoencoder Lineal y PCA]
+\label{thm:ae_pca}
+Considérese un autoencoder con una capa oculta de $k$ neuronas, función de activación lineal y pérdida de reconstrucción cuadrática:
+\[
+\min_{W_1, W_2} \frac{1}{n} \sum_{i=1}^n \|x_i - W_2 W_1 x_i\|^2,
+\]
+donde $W_1 \in \mathbb{R}^{k \times d}$, $W_2 \in \mathbb{R}^{d \times k}$. Entonces, el óptimo global satisface que las filas de $W_1$ generan el mismo subespacio que los primeros $k$ eigenvectores de la matriz de covarianzas muestral.
+\end{theorem}
+
+\begin{proof}
+Para datos centrados, la matriz de pesos óptima $W = W_2 W_1$ debe tener rango a lo sumo $k$. Por el teorema de Eckart-Young, la mejor aproximación de rango $k$ de la matriz de datos (en norma de Frobenius) viene dada por la descomposición en valores singulares truncada. Específicamente, si $\hat{\Sigma} = \frac{1}{n}X^\top X$, entonces la solución satisface $W = U_k U_k^\top$, donde $U_k$ contiene los primeros $k$ eigenvectores de $\hat{\Sigma}$. Cualquier factorización $W = W_2 W_1$ con $W_1$ y $W_2$ de rango completo produce el mismo subespacio que $U_k$.
+\end{proof}
+
+Esta conexión algebraica establece un puente entre el PCA clásico y el deep learning moderno.
+
+
+\section*{Referencias}
+
+\begin{enumerate}
+    \item Haddouche, M., Guedj, B., \& Shawe-Taylor, J. (2024). Generalisation bounds for kernel PCA through PAC-Bayes learning. \textit{Stat}.
+    
+    \item Bishop, C. M. (2006). \textit{Pattern Recognition and Machine Learning}. Springer.
+    
+    \item Feldman, M. J., Misiakiewicz, T., \& Romanov, E. (2025). Sparse PCA: phase transitions and the near optimality of soft thresholding.
+    
+    \item Candès, E. J., Li, X., Ma, Y., \& Wright, J. (2011). Robust principal component analysis? \textit{Journal of the ACM}.
+    
+    \item Tipping, M. E., \& Bishop, C. M. (1999). Probabilistic principal component analysis. \textit{Journal of the Royal Statistical Society: Series B}.
+    
+    \item Schölkopf, B., Smola, A., \& Müller, K. R. (1998). Nonlinear component analysis as a kernel eigenvalue problem. \textit{Neural Computation}.
+\end{enumerate}
+
+\end{document}
